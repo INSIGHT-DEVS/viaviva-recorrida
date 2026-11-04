@@ -160,8 +160,30 @@ async function refreshMe(){
   syncTriviaFromServer();
   drawAll();
 }
-function drawAll(){ drawGate(); drawTrivia(); drawRank(); drawSurvey(); drawHost(); }
+function drawAll(){ drawGate(); drawMeBar(); drawTrivia(); drawRank(); drawSurvey(); drawHost(); }
 function myName(){ return me.estado ? cleanName(me.estado.nombre+" "+me.estado.apellido) : ""; }
+
+/* ---------- Barra del participante (#mebar): nombre y puntaje, arriba de todo ---------- */
+function drawMeBar(){
+  const bar = $("#mebar"); if(!bar) return;
+  const show = LIVE && !!me.session && !me.loading;
+  bar.hidden = !show; bar.innerHTML = "";
+  if(!show) return;
+  const esAdmin = me.estado && me.estado.es_admin;
+  const it = (tv.phase==="done" && tv.result) ? Object.assign({estado:"terminado"}, tv.result) : (me.estado && me.estado.intento);
+  let txt, href = "#trivia", done = false;
+  if(esAdmin){ txt = "Panel de anfitriona"; href = "#anfitrion"; }
+  else if(it && it.estado==="terminado"){ txt = "Trivia "+it.score+"/"+TRIVIA.length+(it.position ? " · "+it.position+"°" : ""); done = true; }
+  else if(it && it.estado==="jugando"){ txt = "Trivia en curso"; }
+  else txt = (me.estado && me.estado.abierta===false) ? "Trivia cerrada" : "Trivia pendiente";
+  bar.append(el("span",{class:"nm",text: myName() || "Tu cuenta"}), el("a",{class:"sc"+(done?" done":""),href,text:txt}));
+}
+// Mantiene el puntaje y la posición al día (otros siguen terminando) sin recargar.
+async function refreshEstado(){
+  if(!LIVE || !me.session || document.hidden) return;
+  try{ const e = await rpc("mi_estado"); if(e && e.ok){ me.estado = e; if(tv.phase==="done" && tv.result && e.intento && e.intento.position) tv.result.position = e.intento.position; drawMeBar(); } }catch(err){}
+}
+setInterval(refreshEstado, 30000);
 
 function errText(e){
   const m = String((e && (e.message||e.error_description||e.code)) || e || "").toLowerCase();
@@ -340,7 +362,7 @@ function drawTrivia(){
               if(r.error==="ya_participo") return refreshMe();
               drawTrivia(); return;
             }
-            tv.phase="playing"; tv.idx=0; tv.answers=[]; tv.t0=Date.now()-(r.transcurrido||0)*1000; tvSave(); drawTrivia();
+            tv.phase="playing"; tv.idx=0; tv.answers=[]; tv.t0=Date.now()-(r.transcurrido||0)*1000; tvSave(); drawTrivia(); refreshEstado();
           }catch(e){ tvBusy=false; tvError=errText(e); drawTrivia(); }
         });
         box.append(err, go);
@@ -429,7 +451,7 @@ async function finish(){
     const r = await rpc("trivia_enviar",{respuestas:answers});
     if(!r || !r.ok){ tvError = r && r.error==="cerrada" ? "La trivia ya cerró y no se pudo sumar tu resultado." : "No pudimos guardar tus respuestas. Probá de nuevo."; drawTrivia(); return; }
     tv.result = {score:r.score, seconds:r.seconds, correct:r.correct, position:r.position};
-    tv.phase="done"; tvSave(); drawTrivia(); loadRank();
+    tv.phase="done"; tvSave(); drawTrivia(); drawMeBar(); loadRank();
   }catch(e){ tvError="No hay conexión. Tus respuestas quedaron guardadas: tocá Reintentar."; drawTrivia(); }
 }
 

@@ -25,7 +25,7 @@ Idioma: español rioplatense (vos).
 | `index.html` | Estructura y textos fijos de las 10 secciones. La barra superior tiene el colegio y la fecha de la visita. |
 | `styles.css` | Estilos. Variables de marca en `:root`. Las fuentes se cargan desde `assets/fonts/`. |
 | `contenido.js` | **Todo el contenido editable**: tramos, puntos del mapa, pasos de obra, oficios, preguntas de la trivia, encuesta. Para cambiar contenido se edita acá, sin tocar lógica. |
-| `app.js` | Lógica: ingreso general (`#gate`), mapa SVG, antes/después, cuentas, trivia, ranking, panel de anfitriona, encuesta. |
+| `app.js` | Lógica: ingreso general (`#gate`), barra del participante (`#mebar`: nombre y puntaje, fija arriba), mapa SVG, antes/después, cuentas, trivia, ranking, panel de anfitriona, encuesta. |
 | `assets/vendor/` | Copia local de supabase-js (`2.45.4`, idéntica byte a byte al archivo del CDN). La página no depende de ningún CDN. |
 | `config.js` | URL y anon key del proyecto de Supabase (públicas por diseño). Si están vacías la app corre en modo práctica, sin cuentas ni ranking. |
 | `supabase/schema.sql` | Base inicial, idempotente. En un proyecto nuevo se aplica primero y después las migraciones, en orden. |

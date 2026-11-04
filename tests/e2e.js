@@ -59,8 +59,19 @@ async function correr(browser, modo) {
     // Simula sesión iniciada (sin red): el ingreso desaparece y la página queda visible.
     await page.evaluate(() => { me.session = { user: { id: '00000000-0000-4000-8000-000000000000' } }; me.loading = false; drawAll(); });
     check('con sesión, el ingreso desaparece', !(await gate.isVisible()) && await page.evaluate(() => !document.body.classList.contains('gated')));
-    await page.evaluate(() => { me.session = null; drawAll(); });
-    check('al cerrar sesión, vuelve el ingreso', await gate.isVisible());
+    // Barra del participante (arriba de todo): nombre y puntaje.
+    await page.evaluate(() => { me.estado = { ok: true, nombre: 'Ana', apellido: 'Pérez', es_admin: false, abierta: true, intento: null, encuesta_respondida: false }; drawAll(); });
+    let mb = await page.locator('#mebar').innerText();
+    check('barra del participante: nombre y "Trivia pendiente" antes de jugar', await page.locator('#mebar').isVisible() && mb.includes('Ana Pérez') && /trivia pendiente/i.test(mb), mb);
+    await page.evaluate(() => { me.estado.intento = { estado: 'terminado', score: 7, seconds: 130, position: 3, answers: [], correct: [] }; drawAll(); });
+    mb = await page.locator('#mebar').innerText();
+    check('barra del participante: puntaje y puesto al terminar', /trivia 7\/10 · 3°/i.test(mb), mb);
+    check('barra del participante: queda fija arriba', await page.evaluate(() => getComputedStyle(document.querySelector('#mebar')).position === 'sticky'));
+    await page.evaluate(() => { me.estado.es_admin = true; drawAll(); });
+    mb = await page.locator('#mebar').innerText();
+    check('barra del participante: para admins lleva al panel', /panel de anfitriona/i.test(mb) && (await page.locator('#mebar a').getAttribute('href')) === '#anfitrion', mb);
+    await page.evaluate(() => { me.estado = null; me.session = null; drawAll(); });
+    check('al cerrar sesión, vuelve el ingreso', await gate.isVisible() && !(await page.locator('#mebar').isVisible()));
     await page.goto(base + '/#anfitrion', { waitUntil: 'load' });
     await page.waitForTimeout(600);
     const gh = await page.locator('#gate').innerText();

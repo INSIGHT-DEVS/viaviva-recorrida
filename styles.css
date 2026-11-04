@@ -58,6 +58,11 @@ button{font:inherit;color:inherit}
 /* ---------- barra superior ---------- */
 .top{background:var(--green);color:var(--on-brand);display:flex;justify-content:space-between;align-items:center;gap:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px}
 .top .mono{font-size:11px}
+/* Barra del participante (nombre + puntaje), pegada arriba al scrollear */
+.mebar{position:sticky;top:0;z-index:40;background:var(--ink);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:9px;font-size:14px;line-height:1.2}
+.mebar .nm{font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mebar .sc{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--yellow);text-decoration:none;white-space:nowrap;flex:none;padding:5px 10px;border:1px solid rgba(241,194,50,.6)}
+.mebar .sc.done{background:var(--yellow);color:#1E1E1E;border-color:var(--yellow)}
 
 /* ---------- hero ---------- */
 .hero{background:var(--green);color:var(--on-brand)}
