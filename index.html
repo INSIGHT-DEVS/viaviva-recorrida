@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vamos a VIAVIVA</title>
+<meta name="description" content="Recorrida por VIAVIVA: cómo se hizo, quién lo hace funcionar y qué viene. Más vida en tu ciudad.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#00B800">
+<meta name="color-scheme" content="light">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VIAVIVA">
+<meta property="og:title" content="Vamos a VIAVIVA">
+<meta property="og:description" content="Recorrida por VIAVIVA: cómo se hizo, quién lo hace funcionar y qué viene. Más vida en tu ciudad.">
+<meta property="og:url" content="https://viaviva-recorrida.vercel.app/">
+<meta property="og:image" content="https://viaviva-recorrida.vercel.app/assets/og-vamos-a-viaviva.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vamos a VIAVIVA">
+<meta name="twitter:description" content="Recorrida por VIAVIVA: cómo se hizo, quién lo hace funcionar y qué viene. Más vida en tu ciudad.">
+<meta name="twitter:image" content="https://viaviva-recorrida.vercel.app/assets/og-vamos-a-viaviva.jpg">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{background:#F6FFF6}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<!-- Datos de conexión a Supabase (se completan en config.js) -->
+<script src="config.js"></script>
+<!-- Librería oficial de Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+</head>
+<body>
+<link rel="stylesheet" href="styles.css">
+
+<section class="host" id="host" hidden aria-label="Panel de anfitriona"></section>
+<div class="top"><span class="mono">VIAVIVA -- Colegio Esquiú</span><span class="logo va" role="img" aria-label="VIAVIVA"></span></div>
+
+<!-- 01 BIENVENIDA -->
+<section class="sec hero" aria-labelledby="t-hero">
+  <div class="rail" aria-hidden="true"><span>01</span><span>Bienvenida</span></div>
+  <div class="inner">
+    <div class="hero-grid">
+      <div>
+        <span class="mono" style="opacity:.85">Recorrida · Viernes 6.11.2026</span>
+        <span class="logo wordmark" role="img" aria-label="VIAVIVA" style="margin-top:14px"></span>
+        <h1 id="t-hero">Más vida en tu ciudad.</h1>
+        <div class="kicker">
+          <p><span class="ln">Hoy recorrés VIAVIVA por dentro:</span><span class="ln">cómo se hizo, quién lo hace funcionar y qué viene.</span></p>
+        </div>
+      </div>
+      <figure class="hero-photo">
+        <img src="assets/aereo.jpg" alt="Vista aérea del viaducto del tren Mitre atravesando Belgrano, con el paseo debajo">
+        <figcaption>4,5 km bajo las vías del Mitre</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- 02 MANIFIESTO -->
+<section class="sec manifesto on-brand" aria-label="Manifiesto">
+  <div class="rail" aria-hidden="true"><span>02</span><span>Manifiesto</span></div>
+  <div class="inner">
+    <span class="eyebrow">Manifiesto</span>
+    <div class="mf">
+      <p><span class="ln">Arriba pasa el tren.</span><span class="ln">Abajo, todo lo demás.</span></p>
+      <p><span class="ln">Donde antes la ciudad se cortaba,</span><span class="ln">hoy se encuentra.</span></p>
+      <p><span class="ln">VIAVIVA no es un lugar de paso.</span><span class="ln">Es donde te dan ganas de quedarte.</span></p>
+      <p><span class="ln">Cada tramo tiene su ritmo.</span></p>
+      <p><span class="ln">Cuatro kilómetros y medio</span><span class="ln">de sabores que llegan de lejos,</span><span class="ln">diseño que te sorprende en cada cuadra,</span><span class="ln">música que se escucha desde la esquina</span><span class="ln">y noches que empiezan sin plan.</span></p>
+      <p><span class="hl">Vamos a VIAVIVA.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 MAPA -->
+<section class="sec mapsec" id="recorrido-mapa" aria-labelledby="t-mapa">
+  <div class="rail" aria-hidden="true"><span>03</span><span>El recorrido</span></div>
+  <div class="inner">
+    <span class="eyebrow">El recorrido</span>
+    <h2 id="t-mapa">Así es el recorrido</h2>
+    <div class="lead"><p><span class="ln">De Monroe a Dorrego, bajo las vías del Mitre:</span><span class="ln">Barrio Chino, Libertador y Hipódromo.</span></p></div>
+    <figure class="bigmap">
+      <div class="bigmap-scroll" tabindex="0" aria-label="Mapa de VIAVIVA. En el celular, deslizá para ver todo el recorrido.">
+        <img src="assets/mapa-viaviva.jpg" alt="Mapa de VIAVIVA sobre las calles de Belgrano y Palermo: VIAVIVA Barrio Chino de Monroe a Sucre, VIAVIVA Libertador de La Pampa a Olleros y VIAVIVA Hipódromo de Olleros a Dorrego." width="1688" height="950">
+      </div>
+      <figcaption class="note"><span class="swipe">Deslizá para ver todo el recorrido →</span> <a href="assets/mapa-viaviva.jpg" target="_blank" rel="noopener">Ver el mapa en grande</a></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 04 ANTES Y DESPUÉS -->
+<section class="sec reason" id="antes-despues" aria-labelledby="t-rw">
+  <div class="rail" aria-hidden="true"><span>04</span><span>La historia</span></div>
+  <div class="inner">
+    <span class="eyebrow">La historia</span>
+    <h2 id="t-rw">La vía que antes dividía, hoy une.</h2>
+    <div class="lead">
+      <p><span class="ln">Hasta 2019, el tren pasaba a nivel de la calle</span><span class="ln">y partía el barrio en dos.</span></p>
+      <p><span class="ln">Con el Viaducto Mitre, las vías subieron y las barreras desaparecieron.</span><span class="ln">Abajo quedó el espacio donde hoy está VIAVIVA.</span></p>
+    </div>
+    <div class="facts">
+      <div class="fact"><b>3,9 km</b><span class="t">de vías elevadas</span><p>El tren pasó a ir en altura entre las avenidas Congreso y Dorrego, atravesando Núñez, Belgrano y Palermo.</p></div>
+      <div class="fact"><b>8</b><span class="t">barreras menos</span><p>Monroe, Blanco Encalada, Mendoza, Juramento, Olazábal, Sucre, La Pampa y Olleros ya no tienen barrera. Además, se abrieron 4 calles que antes estaban cortadas por las vías.</p></div>
+      <div class="fact"><b>650.000</b><span class="t">personas beneficiadas</span><p>Es la suma de todos los que cruzaban o vivían junto a las vías: 100.000 pasajeros por día del ramal Tigre, 30.000 personas que viajaban en colectivos, 70.000 automovilistas y 450.000 vecinos de Núñez, Belgrano y Palermo.</p></div>
+      <div class="fact"><b>Hasta 20 min</b><span class="t">menos de viaje por día</span><p>En hora pico, las barreras más complicadas de la ciudad llegaban a estar bajas unos 20 minutos de cada hora. La de Vértiz y La Pampa, sobre este mismo ramal, hasta 35. Sin barreras, se termina esa espera.</p></div>
+    </div>
+
+    <div class="ad-grid">
+      <div class="ba" id="ba"></div>
+      <div class="ad-copy">
+        <h3>Del terreno vacío al punto de encuentro</h3>
+        <p class="note" style="font-size:16px">El mismo espacio bajo el viaducto: primero, tierra y pastizal; hoy, el lugar para venir a descubrir y disfrutar.</p>
+        <p class="note">Arrastrá la línea amarilla para comparar.</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:28px;margin-top:12px">Paso a paso</h3>
+    <div class="steps" id="steps"></div>
+
+  </div>
+</section>
+
+<!-- 05 BACKSTAGE -->
+<section class="sec backstage" id="oficios" aria-labelledby="t-of">
+  <div class="rail" aria-hidden="true"><span>05</span><span>Backstage</span></div>
+  <div class="inner">
+    <span class="eyebrow">Backstage</span>
+    <h2 id="t-of">¿Quién hace VIAVIVA?</h2>
+    <div class="lead">
+      <p><span class="ln">Para que exista un lugar así hace falta mucha gente distinta.</span><span class="ln">Primero, quienes lo diseñan y lo construyen desde cero.</span><span class="ln">Después, quienes lo hacen funcionar todos los días</span><span class="ln">y quienes le dan vida con locales, eventos y marcas.</span></p>
+    </div>
+    <div class="match" id="match">
+      <h3>¿Dónde encajarías vos?</h3>
+      <p class="note" style="font-size:15px">Elegí lo que más te gusta hacer y te marcamos en qué parte de VIAVIVA podrías trabajar.</p>
+      <div class="int" id="int"></div>
+      <p class="match-out" id="match-out" aria-live="polite"></p>
+    </div>
+    <div id="groups" style="display:flex;flex-direction:column;gap:28px"></div>
+  </div>
+</section>
+
+<!-- 06 CONTEXTO -->
+<section class="sec ctx" id="hoy" aria-labelledby="t-que">
+  <div class="rail" aria-hidden="true"><span>06</span><span>Hoy</span></div>
+  <div class="inner">
+    <span class="eyebrow">Hoy</span>
+    <h2 id="t-que">¿Qué es VIAVIVA hoy?</h2>
+    <div class="stats">
+      <div class="stat"><i style="background:var(--green)"></i><b>4,5 km</b><small>bajo las vías del Mitre, de Monroe a Dorrego</small></div>
+      <div class="stat"><i style="background:var(--red)"></i><b>6 ha</b><small>de espacio público</small></div>
+      <div class="stat"><i style="background:var(--blue)"></i><b>+100</b><small>locales</small></div>
+      <div class="stat"><i style="background:var(--yellow)"></i><b>30 años</b><small>de concesión del terreno, que es del Estado</small></div>
+    </div>
+    <div class="ctx-grid">
+      <div class="quote"><p>“VIAVIVA es un paseo a cielo abierto único de 4,5 km bajo las vías del tren Mitre, del Barrio Chino de Belgrano a Palermo, donde siempre hay algo para descubrir.”</p></div>
+      <div class="ctx-side">
+        <div class="bignum"><b>1.000.000</b><span>de personas lo visitan por mes.</span></div>
+        <div class="lead">
+          <p><span class="ln">Mucha gente lo llama “el Barrio Chino”,</span><span class="ln">pero el Barrio Chino es una parte de VIAVIVA.</span></p>
+          <p>Hay tres tramos y cada uno tiene su propio clima.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 RECORRIDO -->
+<section class="sec" id="mapa" aria-labelledby="t-tr">
+  <div class="rail" aria-hidden="true"><span>07</span><span>Recorrido</span></div>
+  <div class="inner">
+    <span class="eyebrow">Recorrido</span>
+    <h2 id="t-tr">Más de una forma de vivirlo</h2>
+    <div class="tramos">
+      <div class="tr">
+        <div class="tr-head"><span class="logo lg-chino c-chino" role="img" aria-label="VIAVIVA Barrio Chino"></span><div><h3 class="c-chino">La energía y la cultura</h3><span class="status">Abierto desde 2023</span></div></div>
+        <ul class="plans">
+          <li><span>Para comer</span><span>Ramen, baos, dumplings, coreano, japonés y street food.</span></li>
+          <li><span>Para merendar</span><span>Bubble tea, bingsu, café y helado.</span></li>
+          <li><span>Para comprar</span><span>Supermercados asiáticos, papelería, ropa y regalos.</span></li>
+          <li><span>Para la foto</span><span>Festivales, el Año Nuevo Chino y acciones de marcas.</span></li>
+        </ul>
+      </div>
+      <div class="tr">
+        <div class="tr-head"><span class="logo lg-lib c-lib" role="img" aria-label="VIAVIVA Libertador"></span><div><h3 class="c-lib">La experiencia premium</h3><span class="status">Abierto desde nov. 2025</span></div></div>
+        <ul class="plans">
+          <li><span>Para comer</span><span>Mondra y McDonald’s, y vienen más lugares.</span></li>
+          <li><span>Para vestirte</span><span>Estación Central y Zeus.</span></li>
+          <li><span>Para la noche</span><span>Cervecerías, tragos y música.</span></li>
+          <li><span>Para jugar</span><span>Kinderland y la Plaza Bolivia renovada, con juegos y calesita.</span></li>
+          <li><span>Para los autos</span><span>Audi, Volvo, Land Rover y Michelin.</span></li>
+        </ul>
+        <p class="soon"><b style="font-weight:500">Próximamente:</b> nuevas aperturas para descubrir.</p>
+      </div>
+      <div class="tr">
+        <div class="tr-head"><span class="logo lg-hip c-hip" role="img" aria-label="VIAVIVA Hipódromo"></span><div><h3 class="c-hip">La noche al aire libre</h3><span class="status">Próximamente</span></div></div>
+        <ul class="plans">
+          <li><span>Dónde</span><span>Entre Olleros y Dorrego, junto a los Bosques de Palermo.</span></li>
+          <li><span>Qué</span><span>Entretenimiento, gastronomía y planes al aire libre.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="strap">Un recorrido, muchos mundos: cada tramo con su ritmo.</div>
+    <div class="lead"><p><span class="ln">Tocá un punto del mapa y te llevamos a lo que hay ahí.</span><span class="ln">Es esquemático: muestra el orden de las calles principales, no la escala real.</span></p></div>
+    <div class="map-grid">
+      <svg class="map-svg" id="map" viewBox="0 0 330 620" role="img" aria-label="Mapa esquemático de VIAVIVA, de Monroe a Dorrego"></svg>
+      <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+        <div class="panel" id="panel" tabindex="-1" aria-live="polite"></div>
+        <div class="aside" id="dicho">
+          <span class="mono note">En el mapa: La Pampa y la vía</span>
+          <h3>Acá nació un dicho porteño</h3>
+          <p>“Estar en Pampa y la vía” se dice de alguien que se quedó sin un peso. Y viene de este cruce.</p>
+          <p>Entre 1887 y 1926 funcionó el Hipódromo Nacional, cerca de donde hoy está el estadio de River. Para llevar al público había un tranvía gratuito, y su recorrido terminaba en La Pampa y la vía. Ahí bajaban los apostadores que habían perdido todo en las carreras y tenían que arreglárselas para volver a casa.</p>
+          <p>Esa barrera fue una de las que eliminó el viaducto: hoy, en La Pampa, pasás por debajo del tren.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 TRIVIA -->
+<section class="sec quizsec" id="trivia" aria-labelledby="t-q">
+  <div class="rail" aria-hidden="true"><span>08</span><span>Trivia</span></div>
+  <div class="inner">
+    <span class="eyebrow">Trivia</span>
+    <h2 id="t-q">¿Cuánto sabés de VIAVIVA?</h2>
+    <div class="lead">
+      <p><span class="ln">10 preguntas sobre todo lo que viste hoy.</span><span class="ln">Gana quien tenga más respuestas correctas y, si hay empate, quien termine más rápido.</span></p>
+    </div>
+    <div class="tv-grid">
+      <div class="tv" id="tv" aria-live="polite"></div>
+      <aside class="rank" id="rank" aria-live="polite"></aside>
+    </div>
+  </div>
+</section>
+
+<!-- 09 TU OPINIÓN -->
+<section class="sec voice" id="opinion" aria-labelledby="t-op">
+  <div class="rail" aria-hidden="true"><span>09</span><span>Tu opinión</span></div>
+  <div class="inner">
+    <span class="eyebrow">Tu opinión</span>
+    <h2 id="t-op">Contanos qué te pareció</h2>
+    <div class="lead">
+      <p><span class="ln">Queremos saber qué planes te traerían,</span><span class="ln">con quién vendrías y qué le falta a VIAVIVA para la gente de tu edad.</span></p>
+      <p>Son 2 minutos y es anónimo.</p>
+    </div>
+    <div id="survey"></div>
+  </div>
+</section>
+
+<!-- 10 SEGUINOS -->
+<section class="sec final on-brand" aria-labelledby="t-fin">
+  <div class="rail" aria-hidden="true"><span>10</span><span>Seguinos</span></div>
+  <div class="inner" style="gap:28px">
+    <h2 id="t-fin">Vamos a<br>VIAVIVA.</h2>
+    <div class="strip">
+      <div class="s0">Más de una forma de vivirlo</div>
+      <div class="s1"><span class="logo wordmark"></span><small>Barrio Chino</small></div>
+      <div class="s2"><span class="logo wordmark"></span><small>Libertador</small></div>
+      <div class="s3"><span class="logo wordmark"></span><small>Hipódromo</small></div>
+    </div>
+    <div class="links">
+      <a class="lk" href="https://www.instagram.com/viaviva.ar/" target="_blank" rel="noopener"><span class="mono">Instagram</span><b>@viaviva.ar</b><small>Novedades, eventos y lo que pasa cada semana.</small></a>
+      <a class="lk" href="https://www.tiktok.com/@viaviva.ar" target="_blank" rel="noopener"><span class="mono">TikTok</span><b>@viaviva.ar</b><small>Lo que hay para probar, en videos cortos.</small></a>
+      <a class="lk" href="https://www.google.com/maps/search/?api=1&amp;query=VIAVIVA%20Barrio%20Chino%2C%20Av.%20Juramento%201701%2C%20Buenos%20Aires&amp;query_place_id=ChIJl4R5A8W1vJURjFT6CA3Y7aY" target="_blank" rel="noopener"><span class="mono">Cómo llegar</span><b>Av. Juramento 1701</b><small>A metros de la estación Belgrano C del tren Mitre. Abrir en Google Maps.</small></a>
+    </div>
+    <div class="foot">
+      <strong>Más vida en tu ciudad.</strong>
+      <span>Domingo a miércoles de 8 a 24 h · Jueves a sábado de 8 a 2 h</span>
+    </div>
+    <p class="note" style="color:var(--on-brand);opacity:.85">Datos del viaducto: Gobierno de la Ciudad de Buenos Aires. Mapa esquemático, no a escala.</p>
+  </div>
+</section>
+
+<!-- Contenido editable (textos, mapa, trivia, encuesta) -->
+<script src="contenido.js"></script>
+<!-- Lógica de la página (mapa, cuentas, trivia, ranking, panel, encuesta) -->
+<script src="app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "viaviva-recorrida",
+  "private": true,
+  "description": "Vamos a VIAVIVA · web app para recorridas con colegios (HTML/CSS/JS sin build + Supabase + Vercel)",
+  "scripts": {
+    "dev": "npx serve -l 8080 .",
+    "test": "node tests/e2e.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  }
+}
