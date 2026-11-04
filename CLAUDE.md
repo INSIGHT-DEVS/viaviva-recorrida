@@ -1,8 +1,9 @@
 # Vamos a VIAVIVA · recorrida con colegios
 
 Web app mobile-first que los alumnos abren desde un link durante la recorrida por VIAVIVA:
-historia y mapa del paseo, trivia con ranking en vivo, encuesta, y un panel de anfitriona
-(`#anfitrion`) para quien guía la visita. Idioma: español rioplatense (vos).
+ingreso general (crear cuenta o ingresar antes de ver nada), historia y mapa del paseo, trivia
+con ranking en vivo, encuesta, y un panel de anfitriona (`#anfitrion`) para quien guía la visita.
+Idioma: español rioplatense (vos).
 
 ## Stack (sin build)
 
@@ -22,7 +23,8 @@ historia y mapa del paseo, trivia con ranking en vivo, encuesta, y un panel de a
 | `index.html` | Estructura y textos fijos de las 10 secciones. La barra superior tiene el colegio y la fecha de la visita. |
 | `styles.css` | Estilos. Variables de marca en `:root`. Las fuentes se cargan desde `assets/fonts/`. |
 | `contenido.js` | **Todo el contenido editable**: tramos, puntos del mapa, pasos de obra, oficios, preguntas de la trivia, encuesta. Para cambiar contenido se edita acá, sin tocar lógica. |
-| `app.js` | Lógica: mapa SVG, antes/después, cuentas, trivia, ranking, panel de anfitriona, encuesta. |
+| `app.js` | Lógica: ingreso general (`#gate`), mapa SVG, antes/después, cuentas, trivia, ranking, panel de anfitriona, encuesta. |
+| `assets/vendor/` | Copia local de supabase-js (`2.45.4`, idéntica byte a byte al archivo del CDN). La página no depende de ningún CDN. |
 | `config.js` | URL y anon key del proyecto de Supabase (públicas por diseño). Si están vacías la app corre en modo práctica, sin cuentas ni ranking. |
 | `supabase/schema.sql` | Base completa e idempotente (se puede volver a ejecutar sin borrar datos). |
 | `supabase/migrations/` | Cambios posteriores a la base, un archivo por cambio, numerados (`002_*.sql`, `003_*.sql`…). |
@@ -46,8 +48,14 @@ historia y mapa del paseo, trivia con ranking en vivo, encuesta, y un panel de a
    La anon key sí va en `config.js` (es pública y la base se protege con RLS).
 5. **Antes de pushear**: `npm test` y mirar la página servida localmente en viewport móvil (390 px).
    No hay build que falle: los errores solo se ven en el navegador y en la consola.
-6. **Dependencias**: supabase-js se carga desde CDN con versión fija (`2.45.4`). No subir de versión
-   sin volver a probar crear cuenta, ingresar, trivia completa y panel.
+6. **Dependencias**: supabase-js está vendoreada en `assets/vendor/supabase-js-2.45.4/` (el UMD de npm,
+   con su chunk `591.supabase.js` al lado). Para subir de versión: `npm pack @supabase/supabase-js@X`,
+   copiar `dist/umd/*` a una carpeta nueva con la versión en el nombre, cambiar el `<script>` de
+   `index.html`, y volver a probar crear cuenta, ingresar, trivia completa y panel.
+9. **Ingreso general**: con `config.js` completo, `#gate` tapa la página hasta que haya sesión
+   (`drawGate()` en `app.js`, se redibuja en cada `drawAll()`). En modo práctica no aparece. Cualquier
+   cambio en cuentas o sesión tiene que seguir funcionando con el ingreso general y con las cajas de
+   cuenta de trivia, encuesta y panel, que comparten `authBox()`.
 7. **Datos de menores**: se guardan solo nombre, apellido y mail. No agregar campos personales.
    Después de cada visita se borran las cuentas de los alumnos (ver README).
 8. **Contenido fijo por visita**: colegio y fecha en `index.html` (barra superior y hero). Al

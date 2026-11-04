@@ -160,7 +160,7 @@ async function refreshMe(){
   syncTriviaFromServer();
   drawAll();
 }
-function drawAll(){ drawTrivia(); drawRank(); drawSurvey(); drawHost(); }
+function drawAll(){ drawGate(); drawTrivia(); drawRank(); drawSurvey(); drawHost(); }
 function myName(){ return me.estado ? cleanName(me.estado.nombre+" "+me.estado.apellido) : ""; }
 
 function errText(e){
@@ -204,7 +204,8 @@ function authBox(context){
     tabs.appendChild(b);
   });
   if(auth.mode!=="reset") box.append(tabs);
-  const why = context==="trivia" ? "Para jugar la trivia necesitás una cuenta. Así queda tu puntaje y entrás al ranking."
+  const why = context==="gate" ? "Creá tu cuenta con tu nombre y apellido, o ingresá si ya la tenés. Con ella jugás la trivia, entrás al ranking y respondés la encuesta."
+            : context==="trivia" ? "Para jugar la trivia necesitás una cuenta. Así queda tu puntaje y entrás al ranking."
             : context==="survey" ? "Para responder la encuesta necesitás una cuenta. Si ya la creaste para la trivia, ingresá con la misma."
             : "Ingresá con tu cuenta de administradora.";
   box.append(el("p",{class:"note",style:"font-size:15px",text:why}));
@@ -469,6 +470,28 @@ if(LIVE){
   setInterval(()=>{ if(rankVisible && !document.hidden) loadRank(); }, 20000);
 }
 
+/* ---------- Ingreso general (#gate) ---------- */
+/* Con Supabase configurado, la página entera queda tapada hasta que haya sesión: la cuenta se crea
+   (o se ingresa) acá, una sola vez, y después se ve la recorrida completa. En modo práctica no aparece. */
+function drawGate(){
+  const sec = $("#gate"); if(!sec) return;
+  const show = LIVE && (me.loading || !me.session);
+  sec.hidden = !show; document.body.classList.toggle("gated", show);
+  sec.innerHTML = "";
+  if(!show) return;
+  const wrap = el("div",{class:"gate-in"}); sec.appendChild(wrap);
+  const fecha = document.querySelector(".hero .mono");
+  wrap.append(
+    el("span",{class:"mono",text: fecha ? fecha.textContent : "Recorrida"}),
+    el("span",{class:"logo wordmark",role:"img","aria-label":"VIAVIVA"}),
+    el("h1",{text:"Vamos a VIAVIVA."})
+  );
+  if(me.loading){ wrap.append(el("p",{class:"gate-lead",text:"Cargando…"})); return; }
+  if(hostOn() && auth.mode==="signup" && !auth.err && !auth.info) auth.mode="login"; // la anfitriona ya tiene cuenta
+  wrap.append(el("p",{class:"gate-lead",text: hostOn() ? "Panel de anfitriona. Ingresá con tu cuenta de administradora." : "Hoy recorrés VIAVIVA por dentro. Para entrar, primero creá tu cuenta."}));
+  const b = authBox("gate"); b.classList.add("acct-dark"); wrap.append(b);
+}
+
 /* ---------- Panel de anfitriona (#anfitrion, cuentas administradoras) ---------- */
 let host = {data:null, err:"", busy:false, confirm:false, timer:null};
 function hostOn(){ return location.hash === "#anfitrion"; }
@@ -552,7 +575,7 @@ function drawHost(){
   wrap.append(el("p",{style:"font-size:13px",text:"Se actualiza solo cada 10 segundos. Para salir del panel, sacá #anfitrion del link."}));
   host.timer = setInterval(()=>{ if(!document.hidden && !host.busy && !host.confirm) hostLoad(); },10000);
 }
-window.addEventListener("hashchange",()=>{ drawHost(); if(hostOn()){ hostLoad(); window.scrollTo(0,0); } });
+window.addEventListener("hashchange",()=>{ drawGate(); drawHost(); if(hostOn()){ hostLoad(); window.scrollTo(0,0); } });
 
 /* ---------- Encuesta ---------- */
 const SV_KEY = "viaviva-encuesta-esquiu-v3";

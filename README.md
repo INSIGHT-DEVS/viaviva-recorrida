@@ -2,8 +2,8 @@
 
 Página que los alumnos abren desde el celular durante la recorrida por VIAVIVA. Funciona así:
 
-- La recorrida (historia, mapa y tramos) la ve cualquiera que tenga el link.
-- Para **jugar la trivia** y **responder la encuesta** hay que **crear una cuenta** con nombre, apellido, mail y contraseña.
+- Al abrir el link aparece el **ingreso**: cada alumno **crea su cuenta** con nombre, apellido, mail y contraseña (o ingresa si ya la tiene). Recién después ve la recorrida (historia, mapa y tramos).
+- Con esa misma cuenta **juega la trivia** y **responde la encuesta**.
 - El ranking se actualiza en vivo. Quien guía la visita maneja el **panel de anfitriona** desde el celular (`/#anfitrion`), con una cuenta de administradora.
 - La página no aparece en Google.
 
@@ -33,7 +33,7 @@ Desde ese momento, cada push a `main` publica solo; cada rama o PR tiene su URL 
 
 ### 3. Cuenta de administradora
 
-1. Abrir la página, bajar hasta la trivia y tocar **Crear cuenta** con el mail de quien va a guiar la visita. **No jugar la trivia con esa cuenta**, porque aparecería en el ranking.
+1. Abrir la página y, en el ingreso, tocar **Crear cuenta** con el mail de quien va a guiar la visita. **No jugar la trivia con esa cuenta**, porque aparecería en el ranking.
 2. En Supabase → SQL Editor, ejecutar (con ese mail):
    ```sql
    update public.perfiles set es_admin = true
@@ -57,7 +57,7 @@ Opcional: si querés que el link diga `viaviva.com.ar/recorrida`, en Wix → SEO
 
 ## El día de la visita
 
-**Para los chicos:** compartí el link. Cada uno crea su cuenta en la sección de la trivia y juega. Si ya la creó, toca **Ingresar**. Con la misma cuenta responde la encuesta.
+**Para los chicos:** compartí el link. Al abrirlo, cada uno crea su cuenta en la pantalla de ingreso (si ya la creó, toca **Ingresar**) y entra a la recorrida. Con la misma cuenta juega la trivia y responde la encuesta. La sesión queda guardada en el celular: si cierra y vuelve a abrir el link, entra directo.
 
 **Para quien guía, desde el celular:** abrí el favorito `…vercel.app/#anfitrion`.
 
