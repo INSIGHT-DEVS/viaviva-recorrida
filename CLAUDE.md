@@ -13,7 +13,7 @@ Idioma: español rioplatense (vos).
   Auth con mail y contraseña, tablas con RLS y toda la lógica en funciones SQL
   (`supabase/schema.sql`). La página nunca lee ni escribe tablas directamente: solo llama
   RPCs (`mi_estado`, `trivia_empezar`, `trivia_enviar`, `trivia_ranking`, `encuesta_enviar`,
-  `admin_panel`, `admin_abrir`, `admin_resultados`). La corrección de la trivia y el tiempo los
+  `admin_panel`, `admin_abrir`, `admin_resultados`, `admin_reset`). La corrección de la trivia y el tiempo los
   calcula el servidor. Las cuentas administradoras se definen por mail en `admins_autorizados`
   (el trigger `crear_perfil` las marca al crearse; `admins_aplicar()` para cuentas ya existentes).
 - **Hosting**: Vercel conectado a este repo. `main` = producción. Cada rama o PR = URL de preview.
@@ -29,7 +29,7 @@ Idioma: español rioplatense (vos).
 | `assets/vendor/` | Copia local de supabase-js (`2.45.4`, idéntica byte a byte al archivo del CDN). La página no depende de ningún CDN. |
 | `config.js` | URL y anon key del proyecto de Supabase (públicas por diseño). Si están vacías la app corre en modo práctica, sin cuentas ni ranking. |
 | `supabase/schema.sql` | Base inicial, idempotente. En un proyecto nuevo se aplica primero y después las migraciones, en orden. |
-| `supabase/migrations/` | Cambios posteriores a la base, un archivo por cambio, numerados. `002`: administradores por mail y `admin_resultados()`. Los mails autorizados no van en el repo (se insertan aparte, ver README). |
+| `supabase/migrations/` | Cambios posteriores a la base, un archivo por cambio, numerados. `002`: administradores por mail y `admin_resultados()`; `003`: `admin_reset()` (botones de reinicio del panel). Los mails autorizados no van en el repo (se insertan aparte, ver README). |
 | `assets/` | Imágenes, íconos PWA, logos y fuentes woff2. |
 | `tests/e2e.js` | Prueba de humo con Playwright en dos modos (en vivo y práctica), con el panel de resultados simulado. Se corre con `npm test`. |
 | `vercel.json` | Headers: `noindex` (la página no aparece en Google) y `no-cache` para html, js y css. |

@@ -103,6 +103,16 @@ async function correr(browser, modo) {
     check('CSV del ranking: cabecera + 3 filas, respuestas en texto', csv.r.split('\r\n').length === 4 && csv.r.includes('"Ana";"Pérez"') && csv.r.includes('"4,5 km"'));
     check('CSV de la encuesta: cabecera + 2 filas con opciones múltiples unidas', csv.e.split('\r\n').length === 3 && csv.e.includes('Comer algo rico | Festivales y eventos'));
     check('botones de descarga habilitados', !(await page.locator('#host-csv-ranking').isDisabled()) && !(await page.locator('#host-csv-encuesta').isDisabled()));
+    // Zona de reinicio: dos botones con confirmación en dos toques; sin red, el segundo toque avisa.
+    check('zona de reinicio con sus dos opciones', (await page.locator('#host-reset-trivia').count()) === 1 && (await page.locator('#host-reset-todo').count()) === 1);
+    await page.click('#host-reset-todo');
+    await page.waitForTimeout(200);
+    check('primer toque solo arma la confirmación', (await page.locator('#host-reset-todo').innerText()).includes('Tocá de nuevo para confirmar') && (await page.locator('#host-reset-trivia').innerText()) === 'Reiniciar la trivia');
+    await page.evaluate(() => { refreshMe = async () => {}; loadRank = async () => {}; }); // sin red: no pisar la sesión simulada
+    await page.click('#host-reset-todo');
+    await page.waitForTimeout(1500);
+    const rmsg = await page.locator('#host-reset-msg').innerText().catch(() => '');
+    check('segundo toque llama al servidor (sin red avisa y no rompe)', /sin conexión|no se pudo/i.test(rmsg), rmsg);
   } else {
     check('sin Supabase no hay ingreso general', !(await page.locator('#gate').isVisible()));
     check('mapa SVG con 6 puntos', (await page.locator('#map g.pin').count()) === 6);

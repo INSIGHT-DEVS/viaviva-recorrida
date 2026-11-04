@@ -252,6 +252,9 @@ body.gated{overflow:hidden}
 .hcounts li{display:flex;justify-content:space-between;gap:12px;font-size:14px;background:rgba(255,255,255,.06);padding:6px 10px}
 .hquotes{margin:0;padding-left:18px;font-size:14px;display:flex;flex-direction:column;gap:4px}
 @media (max-width:560px){.premios{grid-template-columns:1fr}}
+.hreset{display:flex;flex-direction:column;gap:12px;border-top:1px solid rgba(255,255,255,.15);padding-top:18px;margin-top:6px}
+.hreset-op{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.hreset .ok-msg{color:var(--yellow)}
 .hbtn{border:0;padding:16px 20px;font-size:18px;font-weight:500;cursor:pointer;background:var(--red);color:#fff}
 .hbtn.alt{background:transparent;border:1.5px solid rgba(255,255,255,.6)}
 .hbtn.confirm{background:var(--yellow);color:#1E1E1E}
