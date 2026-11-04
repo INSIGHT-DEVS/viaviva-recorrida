@@ -58,6 +58,11 @@ button{font:inherit;color:inherit}
 /* ---------- barra superior ---------- */
 .top{background:var(--green);color:var(--on-brand);display:flex;justify-content:space-between;align-items:center;gap:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px}
 .top .mono{font-size:11px}
+/* Barra del participante (nombre + puntaje), pegada arriba al scrollear */
+.mebar{position:sticky;top:0;z-index:40;background:var(--ink);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:9px;font-size:14px;line-height:1.2}
+.mebar .nm{font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mebar .sc{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--yellow);text-decoration:none;white-space:nowrap;flex:none;padding:5px 10px;border:1px solid rgba(241,194,50,.6)}
+.mebar .sc.done{background:var(--yellow);color:#1E1E1E;border-color:var(--yellow)}
 
 /* ---------- hero ---------- */
 .hero{background:var(--green);color:var(--on-brand)}
@@ -194,6 +199,16 @@ button{font:inherit;color:inherit}
 /* ---------- trivia ---------- */
 .ctx{background:var(--card)}
 .quizsec{background:var(--lav)}
+/* Ingreso general: pantalla completa, verde de marca, con la caja de cuenta en blanco. */
+.gate{position:fixed;inset:0;z-index:60;overflow:auto;-webkit-overflow-scrolling:touch;background:var(--green);color:var(--on-brand);padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));padding-top:max(28px,env(safe-area-inset-top,0px));padding-bottom:max(40px,env(safe-area-inset-bottom,0px))}
+.gate-in{max-width:520px;margin-inline:auto;display:flex;flex-direction:column;gap:16px}
+.gate .mono{opacity:.85}
+.gate .wordmark{width:min(100%,360px);margin-top:4px}
+.gate h1{font-size:clamp(36px,8vw,56px);line-height:1;font-weight:400;margin-top:10px}
+.gate .gate-lead{font-size:18px;line-height:1.35;max-width:46ch}
+.gate .acct-dark{margin-top:8px}
+.gate .acct-dark .note{color:var(--muted)}
+body.gated{overflow:hidden}
 .host{background:var(--ink);color:#fff;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 32px}
 .host-in{max-width:720px;margin-inline:auto;display:flex;flex-direction:column;gap:18px}
 .host .mono{color:var(--yellow)}
@@ -215,6 +230,28 @@ button{font:inherit;color:inherit}
 .hlist .pos{font-family:var(--mono);color:var(--yellow)}
 .hlist .tm{font-family:var(--mono);font-size:13px;opacity:.75}
 .hbtns{display:flex;flex-wrap:wrap;gap:10px}
+/* Resultados y premios dentro del panel de anfitriona */
+.hres{display:flex;flex-direction:column;gap:14px;border-top:1px solid rgba(255,255,255,.15);padding-top:18px}
+.hres h3{color:#fff;font-size:22px;font-weight:500}
+.hres .hnote{font-size:14px}
+.premios{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.premio{background:rgba(255,255,255,.08);padding:12px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.premio:first-child{background:var(--yellow);color:#1E1E1E}
+.premio:first-child .mono{color:#1E1E1E;opacity:.75}
+.premio b{font-size:18px;font-weight:500;line-height:1.15;overflow-wrap:anywhere}
+.premio span{font-size:14px}
+.premio small{font-size:12px;opacity:.75;overflow-wrap:anywhere}
+.hscroll{overflow:auto;-webkit-overflow-scrolling:touch}
+.htable{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+.htable th,.htable td{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.15);white-space:nowrap}
+.htable th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--yellow);font-weight:500}
+.htable tr.premiado td{color:var(--yellow)}
+.hq{display:flex;flex-direction:column;gap:6px}
+.hq .hq-t{font-weight:500;opacity:1}
+.hcounts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.hcounts li{display:flex;justify-content:space-between;gap:12px;font-size:14px;background:rgba(255,255,255,.06);padding:6px 10px}
+.hquotes{margin:0;padding-left:18px;font-size:14px;display:flex;flex-direction:column;gap:4px}
+@media (max-width:560px){.premios{grid-template-columns:1fr}}
 .hbtn{border:0;padding:16px 20px;font-size:18px;font-weight:500;cursor:pointer;background:var(--red);color:#fff}
 .hbtn.alt{background:transparent;border:1.5px solid rgba(255,255,255,.6)}
 .hbtn.confirm{background:var(--yellow);color:#1E1E1E}

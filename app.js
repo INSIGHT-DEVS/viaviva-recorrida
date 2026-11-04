@@ -160,8 +160,30 @@ async function refreshMe(){
   syncTriviaFromServer();
   drawAll();
 }
-function drawAll(){ drawTrivia(); drawRank(); drawSurvey(); drawHost(); }
+function drawAll(){ drawGate(); drawMeBar(); drawTrivia(); drawRank(); drawSurvey(); drawHost(); }
 function myName(){ return me.estado ? cleanName(me.estado.nombre+" "+me.estado.apellido) : ""; }
+
+/* ---------- Barra del participante (#mebar): nombre y puntaje, arriba de todo ---------- */
+function drawMeBar(){
+  const bar = $("#mebar"); if(!bar) return;
+  const show = LIVE && !!me.session && !me.loading;
+  bar.hidden = !show; bar.innerHTML = "";
+  if(!show) return;
+  const esAdmin = me.estado && me.estado.es_admin;
+  const it = (tv.phase==="done" && tv.result) ? Object.assign({estado:"terminado"}, tv.result) : (me.estado && me.estado.intento);
+  let txt, href = "#trivia", done = false;
+  if(esAdmin){ txt = "Panel de anfitriona"; href = "#anfitrion"; }
+  else if(it && it.estado==="terminado"){ txt = "Trivia "+it.score+"/"+TRIVIA.length+(it.position ? " · "+it.position+"°" : ""); done = true; }
+  else if(it && it.estado==="jugando"){ txt = "Trivia en curso"; }
+  else txt = (me.estado && me.estado.abierta===false) ? "Trivia cerrada" : "Trivia pendiente";
+  bar.append(el("span",{class:"nm",text: myName() || "Tu cuenta"}), el("a",{class:"sc"+(done?" done":""),href,text:txt}));
+}
+// Mantiene el puntaje y la posición al día (otros siguen terminando) sin recargar.
+async function refreshEstado(){
+  if(!LIVE || !me.session || document.hidden) return;
+  try{ const e = await rpc("mi_estado"); if(e && e.ok){ me.estado = e; if(tv.phase==="done" && tv.result && e.intento && e.intento.position) tv.result.position = e.intento.position; drawMeBar(); } }catch(err){}
+}
+setInterval(refreshEstado, 30000);
 
 function errText(e){
   const m = String((e && (e.message||e.error_description||e.code)) || e || "").toLowerCase();
@@ -204,7 +226,8 @@ function authBox(context){
     tabs.appendChild(b);
   });
   if(auth.mode!=="reset") box.append(tabs);
-  const why = context==="trivia" ? "Para jugar la trivia necesitás una cuenta. Así queda tu puntaje y entrás al ranking."
+  const why = context==="gate" ? "Creá tu cuenta con tu nombre y apellido, o ingresá si ya la tenés. Con ella jugás la trivia, entrás al ranking y respondés la encuesta."
+            : context==="trivia" ? "Para jugar la trivia necesitás una cuenta. Así queda tu puntaje y entrás al ranking."
             : context==="survey" ? "Para responder la encuesta necesitás una cuenta. Si ya la creaste para la trivia, ingresá con la misma."
             : "Ingresá con tu cuenta de administradora.";
   box.append(el("p",{class:"note",style:"font-size:15px",text:why}));
@@ -339,7 +362,7 @@ function drawTrivia(){
               if(r.error==="ya_participo") return refreshMe();
               drawTrivia(); return;
             }
-            tv.phase="playing"; tv.idx=0; tv.answers=[]; tv.t0=Date.now()-(r.transcurrido||0)*1000; tvSave(); drawTrivia();
+            tv.phase="playing"; tv.idx=0; tv.answers=[]; tv.t0=Date.now()-(r.transcurrido||0)*1000; tvSave(); drawTrivia(); refreshEstado();
           }catch(e){ tvBusy=false; tvError=errText(e); drawTrivia(); }
         });
         box.append(err, go);
@@ -428,7 +451,7 @@ async function finish(){
     const r = await rpc("trivia_enviar",{respuestas:answers});
     if(!r || !r.ok){ tvError = r && r.error==="cerrada" ? "La trivia ya cerró y no se pudo sumar tu resultado." : "No pudimos guardar tus respuestas. Probá de nuevo."; drawTrivia(); return; }
     tv.result = {score:r.score, seconds:r.seconds, correct:r.correct, position:r.position};
-    tv.phase="done"; tvSave(); drawTrivia(); loadRank();
+    tv.phase="done"; tvSave(); drawTrivia(); drawMeBar(); loadRank();
   }catch(e){ tvError="No hay conexión. Tus respuestas quedaron guardadas: tocá Reintentar."; drawTrivia(); }
 }
 
@@ -469,13 +492,39 @@ if(LIVE){
   setInterval(()=>{ if(rankVisible && !document.hidden) loadRank(); }, 20000);
 }
 
+/* ---------- Ingreso general (#gate) ---------- */
+/* Con Supabase configurado, la página entera queda tapada hasta que haya sesión: la cuenta se crea
+   (o se ingresa) acá, una sola vez, y después se ve la recorrida completa. En modo práctica no aparece. */
+function drawGate(){
+  const sec = $("#gate"); if(!sec) return;
+  const show = LIVE && (me.loading || !me.session);
+  sec.hidden = !show; document.body.classList.toggle("gated", show);
+  sec.innerHTML = "";
+  if(!show) return;
+  const wrap = el("div",{class:"gate-in"}); sec.appendChild(wrap);
+  const fecha = document.querySelector(".hero .mono");
+  wrap.append(
+    el("span",{class:"mono",text: fecha ? fecha.textContent : "Recorrida"}),
+    el("span",{class:"logo wordmark",role:"img","aria-label":"VIAVIVA"}),
+    el("h1",{text:"Vamos a VIAVIVA."})
+  );
+  if(me.loading){ wrap.append(el("p",{class:"gate-lead",text:"Cargando…"})); return; }
+  if(hostOn() && auth.mode==="signup" && !auth.err && !auth.info) auth.mode="login"; // la anfitriona ya tiene cuenta
+  wrap.append(el("p",{class:"gate-lead",text: hostOn() ? "Panel de anfitriona. Ingresá con tu cuenta de administradora." : "Hoy recorrés VIAVIVA por dentro. Para entrar, primero creá tu cuenta."}));
+  const b = authBox("gate"); b.classList.add("acct-dark"); wrap.append(b);
+}
+
 /* ---------- Panel de anfitriona (#anfitrion, cuentas administradoras) ---------- */
-let host = {data:null, err:"", busy:false, confirm:false, timer:null};
+let host = {data:null, res:null, resErr:"", err:"", busy:false, confirm:false, timer:null};
 function hostOn(){ return location.hash === "#anfitrion"; }
 async function hostLoad(){
   if(!LIVE || !me.session) return;
   try{ const r = await rpc("admin_panel"); if(r && r.ok){ host.data=r; host.err=""; } else { host.data=null; host.err = r && r.error==="no_admin" ? "no_admin" : "No se pudo cargar."; } }
   catch(e){ host.err="Sin conexión. Reintentando…"; }
+  if(host.data){
+    try{ const r = await rpc("admin_resultados"); if(r && r.ok){ host.res=r; host.resErr=""; } else host.resErr="No se pudieron cargar los resultados."; }
+    catch(e){ host.resErr="Sin conexión para cargar los resultados. Reintentando…"; }
+  }
   drawHost();
 }
 async function hostSet(open){
@@ -543,16 +592,91 @@ function drawHost(){
   rf.addEventListener("click",hostLoad); btns.append(rf);
   wrap.append(btns);
   if(host.err) wrap.append(el("p",{class:"err",text:host.err}));
-  if(d.rows.length>3){
-    wrap.append(el("span",{class:"mono",text:"Ranking completo"}));
-    const ol = el("ol",{class:"hlist"});
-    d.rows.forEach((r,i)=>ol.appendChild(el("li",{},[el("span",{class:"pos",text:(i+1)+"°"}),el("span",{text:r.nombre}),el("span",{text:r.score+"/"+TRIVIA.length}),el("span",{class:"tm",text:fmtTime(r.seconds)})])));
-    wrap.append(ol);
-  }
+  hostResultados(wrap);
   wrap.append(el("p",{style:"font-size:13px",text:"Se actualiza solo cada 10 segundos. Para salir del panel, sacá #anfitrion del link."}));
   host.timer = setInterval(()=>{ if(!document.hidden && !host.busy && !host.confirm) hostLoad(); },10000);
 }
-window.addEventListener("hashchange",()=>{ drawHost(); if(hostOn()){ hostLoad(); window.scrollTo(0,0); } });
+
+/* Resultados y premios: ranking completo con mail, quiénes faltan, resumen de la encuesta y descargas CSV.
+   Solo lo devuelve el servidor a cuentas administradoras (admin_resultados). La encuesta es anónima:
+   llega sin identidad. */
+function hostResultados(wrap){
+  const R = host.res, N = (R && R.total_preguntas) || TRIVIA.length;
+  const box = el("div",{class:"hres",id:"host-res"}); wrap.appendChild(box);
+  box.append(el("span",{class:"mono",text:"Resultados y premios"}));
+  if(!R){ box.append(el("p",{text: host.resErr || "Cargando resultados…"})); return; }
+  const rk = R.ranking||[], st = R.sin_terminar||[], enc = R.encuestas||[];
+  box.append(el("h3",{text: R.open ? "Van ganando (los premios se definen al cerrar la trivia)" : "Ganadores"}));
+  box.append(el("p",{class:"hnote",text:"Gana quien tiene más correctas; a igual puntaje, quien tardó menos."}));
+  const prem = el("div",{class:"premios"});
+  if(!rk.length) prem.append(el("p",{text:"Todavía nadie terminó la trivia."}));
+  ["1er premio","2do premio","3er premio"].forEach((t,i)=>{
+    const r = rk[i]; if(!r) return;
+    prem.append(el("div",{class:"premio"},[
+      el("span",{class:"mono",text:t}), el("b",{text:r.nombre+" "+r.apellido}),
+      el("span",{text:r.correctas+"/"+N+" correctas · "+fmtTime(r.segundos)}), el("small",{text:r.email})
+    ]));
+  });
+  box.append(prem);
+  if(rk.length){
+    const tbl = el("table",{class:"htable"});
+    tbl.append(el("thead",{},[el("tr",{},["#","Nombre","Correctas","Tiempo","Mail"].map(h=>el("th",{text:h})))]));
+    const tb = el("tbody");
+    rk.forEach(r=>tb.append(el("tr",{class:r.puesto<=3?"premiado":""},[
+      el("td",{text:r.puesto+"°"}), el("td",{text:r.nombre+" "+r.apellido}), el("td",{text:r.correctas+"/"+N}),
+      el("td",{text:fmtTime(r.segundos)}), el("td",{text:r.email})
+    ])));
+    tbl.append(tb); box.append(el("div",{class:"hscroll"},[tbl]));
+  }
+  box.append(el("p",{class:"hnote",text: st.length
+    ? "Sin terminar ("+st.length+"): "+st.map(s=>s.nombre+" "+s.apellido+(s.estado==="jugando"?" (jugando)":"")).join(", ")+"."
+    : "Todos los que crearon cuenta terminaron la trivia."}));
+  box.append(el("h3",{text:"Encuesta · "+enc.length+(enc.length===1?" respuesta":" respuestas")}));
+  if(enc.length){
+    ENCUESTA.forEach(q=>{
+      if(q.type==="single"||q.type==="multi"){
+        const counts = {};
+        enc.forEach(e=>{
+          const v = e.respuestas[q.id]; (Array.isArray(v)?v:(v?[v]:[])).forEach(o=>{ counts[o]=(counts[o]||0)+1; });
+          const otro = q.other && e.respuestas[q.id+"_otro"]; if(otro){ const k="Otro: "+otro; counts[k]=(counts[k]||0)+1; }
+        });
+        const entradas = Object.entries(counts).sort((a,b)=>b[1]-a[1]); if(!entradas.length) return;
+        const ul = el("ul",{class:"hcounts"});
+        entradas.forEach(([o,n])=>ul.append(el("li",{},[el("span",{text:o}),el("b",{text:String(n)})])));
+        box.append(el("div",{class:"hq"},[el("p",{class:"hq-t",text:q.q}), ul]));
+      } else {
+        const vals = enc.map(e=>e.respuestas[q.id]).filter(Boolean);
+        if(vals.length){ const ul = el("ul",{class:"hquotes"}); vals.forEach(v=>ul.append(el("li",{text:v}))); box.append(el("div",{class:"hq"},[el("p",{class:"hq-t",text:q.q}), ul])); }
+      }
+    });
+  }
+  const dl = el("div",{class:"hbtns"});
+  const b1 = el("button",{type:"button",class:"hbtn alt",id:"host-csv-ranking",text:"Descargar ranking (CSV)"});
+  b1.addEventListener("click",()=>descargarCSV("ranking-viaviva.csv", csvRanking(rk,N))); if(!rk.length) b1.disabled=true;
+  const b2 = el("button",{type:"button",class:"hbtn alt",id:"host-csv-encuesta",text:"Descargar encuesta (CSV)"});
+  b2.addEventListener("click",()=>descargarCSV("encuesta-viaviva.csv", csvEncuesta(enc))); if(!enc.length) b2.disabled=true;
+  dl.append(b1,b2); box.append(dl);
+  box.append(el("p",{class:"hnote",text:"Los CSV se abren en Excel o Google Sheets (separados por punto y coma)."}));
+}
+function csvCelda(v){ v = v==null ? "" : Array.isArray(v) ? v.join(" | ") : String(v); return '"'+v.replace(/"/g,'""')+'"'; }
+function csvRanking(rk,N){
+  const head = ["Puesto","Nombre","Apellido","Mail","Correctas","Total","Segundos","Tiempo","Inicio","Fin"].concat(TRIVIA.map((q,i)=>"P"+(i+1)+": "+q.q));
+  const rows = rk.map(r=>[r.puesto,r.nombre,r.apellido,r.email,r.correctas,N,r.segundos,fmtTime(r.segundos),r.inicio,r.fin]
+    .concat(TRIVIA.map((q,i)=>{ const a=(r.respuestas||[])[i]; return Number.isInteger(a)&&a>=0 ? (q.o[a]||String(a)) : "sin responder"; })));
+  return [head].concat(rows).map(l=>l.map(csvCelda).join(";")).join("\r\n");
+}
+function csvEncuesta(enc){
+  const cols = []; ENCUESTA.forEach(q=>{ cols.push({id:q.id,t:q.q}); if(q.other) cols.push({id:q.id+"_otro",t:q.q+" (otro)"}); });
+  const head = ["Fecha"].concat(cols.map(c=>c.t));
+  const rows = enc.map(e=>[e.creada].concat(cols.map(c=>e.respuestas[c.id])));
+  return [head].concat(rows).map(l=>l.map(csvCelda).join(";")).join("\r\n");
+}
+function descargarCSV(nombre, texto){
+  const blob = new Blob(["﻿"+texto],{type:"text/csv;charset=utf-8"});
+  const a = el("a",{href:URL.createObjectURL(blob),download:nombre}); document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1000);
+}
+window.addEventListener("hashchange",()=>{ drawGate(); drawHost(); if(hostOn()){ hostLoad(); window.scrollTo(0,0); } });
 
 /* ---------- Encuesta ---------- */
 const SV_KEY = "viaviva-encuesta-esquiu-v3";

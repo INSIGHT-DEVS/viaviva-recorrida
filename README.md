@@ -2,8 +2,8 @@
 
 Página que los alumnos abren desde el celular durante la recorrida por VIAVIVA. Funciona así:
 
-- La recorrida (historia, mapa y tramos) la ve cualquiera que tenga el link.
-- Para **jugar la trivia** y **responder la encuesta** hay que **crear una cuenta** con nombre, apellido, mail y contraseña.
+- Al abrir el link aparece el **ingreso**: cada alumno **crea su cuenta** con nombre, apellido, mail y contraseña (o ingresa si ya la tiene). Recién después ve la recorrida (historia, mapa y tramos).
+- Con esa misma cuenta **juega la trivia** y **responde la encuesta**.
 - El ranking se actualiza en vivo. Quien guía la visita maneja el **panel de anfitriona** desde el celular (`/#anfitrion`), con una cuenta de administradora.
 - La página no aparece en Google.
 
@@ -31,15 +31,19 @@ Se usa un proyecto de Supabase **propio de esta app** (`viaviva-recorrida`). No 
 
 Desde ese momento, cada push a `main` publica solo; cada rama o PR tiene su URL de preview.
 
-### 3. Cuenta de administradora
+### 3. Cuentas de administración
 
-1. Abrir la página, bajar hasta la trivia y tocar **Crear cuenta** con el mail de quien va a guiar la visita. **No jugar la trivia con esa cuenta**, porque aparecería en el ranking.
-2. En Supabase → SQL Editor, ejecutar (con ese mail):
-   ```sql
-   update public.perfiles set es_admin = true
-   where id = (select id from auth.users where email = 'mail@viaviva.com.ar');
-   ```
-3. En el celular, abrir `https://viaviva-recorrida.vercel.app/#anfitrion` e ingresar. Tiene que aparecer el panel. Guardarlo en favoritos.
+Los mails autorizados viven en la tabla `admins_autorizados` de Supabase: cualquier cuenta creada con uno de esos mails nace como administradora, sin ningún paso extra. Para autorizar a alguien más, en Supabase → SQL Editor (o pidiéndoselo a Claude con el conector):
+
+```sql
+insert into public.admins_autorizados (email, nota) values ('mail@ejemplo.com', 'Quién es') on conflict do nothing;
+select public.admins_aplicar();  -- marca también las cuentas que ya existían con ese mail
+```
+
+Después, cada administrador:
+
+1. Abre la página y, en el ingreso, toca **Crear cuenta** con su mail autorizado. **No juega la trivia con esa cuenta**, porque aparecería en el ranking.
+2. En el celular, abre `https://viaviva-recorrida.vercel.app/#anfitrion`. Tiene que aparecer el panel. Guardarlo en favoritos.
 
 ### 4. Probar
 
@@ -57,11 +61,11 @@ Opcional: si querés que el link diga `viaviva.com.ar/recorrida`, en Wix → SEO
 
 ## El día de la visita
 
-**Para los chicos:** compartí el link. Cada uno crea su cuenta en la sección de la trivia y juega. Si ya la creó, toca **Ingresar**. Con la misma cuenta responde la encuesta.
+**Para los chicos:** compartí el link. Al abrirlo, cada uno crea su cuenta en la pantalla de ingreso (si ya la creó, toca **Ingresar**) y entra a la recorrida. Con la misma cuenta juega la trivia y responde la encuesta. La sesión queda guardada en el celular: si cierra y vuelve a abrir el link, entra directo.
 
 **Para quien guía, desde el celular:** abrí el favorito `…vercel.app/#anfitrion`.
 
-- Ves cuántos empezaron, cuántos están jugando y cuántos terminaron, las cuentas creadas, las encuestas respondidas y quién va ganando (nombre completo, puntaje y tiempo).
+- Ves cuántos empezaron, cuántos están jugando y cuántos terminaron, las cuentas creadas, las encuestas respondidas, quién va ganando (nombre completo, puntaje y tiempo) y, más abajo, los resultados completos con los tres premios.
 - Cuando "jugando ahora" llegue a 0, tocá **Cerrar trivia y anunciar ganador** y confirmá. En tu pantalla y en la de todos aparece **"Ganó …"**.
 - Si cerraste sin querer, tocá **Reabrir trivia**.
 
@@ -72,14 +76,16 @@ Opcional: si querés que el link diga `viaviva.com.ar/recorrida`, en Wix → SEO
 - La corrección y el tiempo los hace el servidor.
 - Gana quien tenga más correctas. Si hay empate, gana quien tardó menos.
 
-## Ver y descargar los resultados
+## Resultados, premios y encuesta
 
-En Supabase → Table Editor:
+Todo está en el panel `/#anfitrion`, sección **Resultados y premios**, sin entrar a Supabase:
 
-- **`ver_ranking`**: puesto, nombre, apellido, mail, correctas, segundos y respuestas.
-- **`ver_encuesta`**: una fila por respuesta, con una columna por pregunta.
+- **Ganadores**: los tres primeros puestos con nombre completo, mail, correctas y tiempo (más correctas gana; a igual puntaje, menos tiempo). Mientras la trivia está abierta dice "Van ganando"; al cerrarla, "Ganadores".
+- **Tabla completa** de todos los que terminaron, y la lista de quiénes crearon cuenta pero no terminaron.
+- **Encuesta**: cantidad de respuestas y, por pregunta, cuántos eligieron cada opción; las respuestas abiertas se listan completas. La encuesta es anónima: no se muestra quién respondió qué.
+- **Descargar ranking (CSV)** y **Descargar encuesta (CSV)**: se abren en Excel o Google Sheets (separados por punto y coma). El CSV del ranking incluye la respuesta que dio cada uno a cada pregunta.
 
-Para descargar cualquiera de las dos: Export → CSV. Se abre en Excel o Google Sheets.
+Las mismas vistas existen en Supabase (Table Editor → `ver_ranking` y `ver_encuesta`) para quien tenga acceso al proyecto.
 
 ## Cosas a tener en cuenta
 
