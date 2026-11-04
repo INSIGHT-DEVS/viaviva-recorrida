@@ -65,6 +65,33 @@ async function correr(browser, modo) {
     await page.waitForTimeout(600);
     const gh = await page.locator('#gate').innerText();
     check('en #anfitrion el ingreso arranca en "Ingresar"', gh.includes('administradora') && (await page.locator('#gate [role=tab][aria-selected="true"]').innerText()) === 'Ingresar', gh.slice(0, 80));
+    // Panel de resultados con datos simulados (sin red ni cuentas reales): premios, tabla, encuesta y CSV.
+    await page.evaluate(() => {
+      me.session = { user: { id: '00000000-0000-4000-8000-000000000000', email: 'admin@example.com' } }; me.loading = false;
+      host.data = { ok: true, open: false, registrados: 4, started: 4, finished: 3, encuestas: 2, rows: [
+        { nombre: 'Ana Pérez', score: 10, seconds: 95 }, { nombre: 'Bruno Gómez', score: 10, seconds: 120 }, { nombre: 'Caro Díaz', score: 6, seconds: 80 } ] };
+      host.res = { ok: true, open: false, total_preguntas: 10,
+        ranking: [
+          { puesto: 1, nombre: 'Ana', apellido: 'Pérez', email: 'ana@example.com', correctas: 10, segundos: 95, inicio: 'i', fin: 'f', respuestas: [0,2,1,0,2,2,1,1,2,0] },
+          { puesto: 2, nombre: 'Bruno', apellido: 'Gómez', email: 'bruno@example.com', correctas: 10, segundos: 120, inicio: 'i', fin: 'f', respuestas: [0,2,1,0,2,2,1,1,2,0] },
+          { puesto: 3, nombre: 'Caro', apellido: 'Díaz', email: 'caro@example.com', correctas: 6, segundos: 80, inicio: 'i', fin: 'f', respuestas: [0,2,1,0,2,2,0,0,0,1] } ],
+        sin_terminar: [{ nombre: 'Dani', apellido: 'López', email: 'dani@example.com', estado: 'jugando' }],
+        encuestas: [
+          { creada: '2026-11-06T13:00:00Z', respuestas: { conocias: 'Es la primera vez', plan: ['Comer algo rico', 'Festivales y eventos'], edad: '15 o 16', gusto: 'El mapa' } },
+          { creada: '2026-11-06T13:05:00Z', respuestas: { conocias: 'Vine alguna vez', plan: ['Comer algo rico'], edad: '15 o 16' } } ] };
+      drawAll();
+    });
+    const res = page.locator('#host-res');
+    const rtxt = await res.innerText();
+    check('panel de resultados: 3 premios con nombre completo y mail', (await res.locator('.premio').count()) === 3 && /1er premio/i.test(rtxt) && rtxt.includes('Ana Pérez') && rtxt.includes('ana@example.com'));
+    check('panel de resultados: título "Ganadores" con la trivia cerrada', rtxt.includes('Ganadores'));
+    check('panel de resultados: tabla completa con 3 filas', (await res.locator('table tbody tr').count()) === 3);
+    check('panel de resultados: lista quiénes no terminaron', rtxt.includes('Sin terminar (1): Dani López (jugando)'));
+    check('panel de resultados: resumen de la encuesta cuenta opciones', rtxt.includes('Encuesta · 2 respuestas') && rtxt.includes('Comer algo rico') && rtxt.includes('El mapa'));
+    const csv = await page.evaluate(() => ({ r: csvRanking(host.res.ranking, 10), e: csvEncuesta(host.res.encuestas) }));
+    check('CSV del ranking: cabecera + 3 filas, respuestas en texto', csv.r.split('\r\n').length === 4 && csv.r.includes('"Ana";"Pérez"') && csv.r.includes('"4,5 km"'));
+    check('CSV de la encuesta: cabecera + 2 filas con opciones múltiples unidas', csv.e.split('\r\n').length === 3 && csv.e.includes('Comer algo rico | Festivales y eventos'));
+    check('botones de descarga habilitados', !(await page.locator('#host-csv-ranking').isDisabled()) && !(await page.locator('#host-csv-encuesta').isDisabled()));
   } else {
     check('sin Supabase no hay ingreso general', !(await page.locator('#gate').isVisible()));
     check('mapa SVG con 6 puntos', (await page.locator('#map g.pin').count()) === 6);
