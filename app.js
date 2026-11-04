@@ -515,7 +515,7 @@ function drawGate(){
 }
 
 /* ---------- Panel de anfitriona (#anfitrion, cuentas administradoras) ---------- */
-let host = {data:null, res:null, resErr:"", err:"", busy:false, confirm:false, timer:null};
+let host = {data:null, res:null, resErr:"", err:"", busy:false, confirm:false, timer:null, resetArm:null, resetBusy:false, resetMsg:""};
 function hostOn(){ return location.hash === "#anfitrion"; }
 async function hostLoad(){
   if(!LIVE || !me.session) return;
@@ -526,6 +526,23 @@ async function hostLoad(){
     catch(e){ host.resErr="Sin conexión para cargar los resultados. Reintentando…"; }
   }
   drawHost();
+}
+/* Reset desde el panel. 'trivia': borra intentos y reabre (conserva cuentas y encuesta).
+   'todo': borra cuentas de alumnos, intentos y encuestas (conserva administradores). Doble toque para confirmar. */
+async function hostReset(que){
+  host.resetBusy=true; host.resetMsg=""; drawHost();
+  try{
+    const r = await rpc("admin_reset",{que});
+    if(r && r.ok){
+      host.resetMsg = que==="trivia"
+        ? "Trivia reiniciada: se borraron "+r.intentos+" intento"+(r.intentos===1?"":"s")+" y quedó abierta."
+        : "Base limpia: se borraron "+r.cuentas+" cuenta"+(r.cuentas===1?"":"s")+" de alumnos, "+r.intentos+" intento"+(r.intentos===1?"":"s")+" y "+r.encuestas+" encuesta"+(r.encuestas===1?"":"s")+". La trivia quedó abierta.";
+      host.res=null;
+    } else host.resetMsg = "No se pudo reiniciar"+(r && r.error==="no_admin" ? ": tu cuenta no es administradora." : ". Probá de nuevo.");
+  }catch(e){ host.resetMsg="Sin conexión. Probá de nuevo."; }
+  host.resetBusy=false; host.resetArm=null;
+  tv = blankTv(); tvSave();           // por si la cuenta administradora había jugado
+  await hostLoad(); loadRank(); refreshMe();
 }
 async function hostSet(open){
   host.busy=true; drawHost();
@@ -593,6 +610,7 @@ function drawHost(){
   wrap.append(btns);
   if(host.err) wrap.append(el("p",{class:"err",text:host.err}));
   hostResultados(wrap);
+  hostZonaReset(wrap);
   wrap.append(el("p",{style:"font-size:13px",text:"Se actualiza solo cada 10 segundos. Para salir del panel, sacá #anfitrion del link."}));
   host.timer = setInterval(()=>{ if(!document.hidden && !host.busy && !host.confirm) hostLoad(); },10000);
 }
@@ -657,6 +675,28 @@ function hostResultados(wrap){
   b2.addEventListener("click",()=>descargarCSV("encuesta-viaviva.csv", csvEncuesta(enc))); if(!enc.length) b2.disabled=true;
   dl.append(b1,b2); box.append(dl);
   box.append(el("p",{class:"hnote",text:"Los CSV se abren en Excel o Google Sheets (separados por punto y coma)."}));
+}
+function hostZonaReset(box){
+  const z = el("div",{class:"hreset",id:"host-reset"}); box.appendChild(z);
+  z.append(el("span",{class:"mono",text:"Reiniciar"}));
+  z.append(el("p",{class:"hnote",text:"Dos opciones, las dos definitivas: no se puede deshacer. Antes de borrar, bajá los CSV de arriba."}));
+  const arm = (que, label)=>{
+    const armed = host.resetArm===que;
+    const b = el("button",{type:"button",class:"hbtn"+(armed?" confirm":" alt"),id:"host-reset-"+que,
+      text: host.resetBusy ? "Borrando…" : armed ? "Tocá de nuevo para confirmar" : label});
+    if(host.resetBusy) b.disabled=true;
+    b.addEventListener("click",()=>{
+      if(host.resetArm!==que){ host.resetArm=que; host.resetMsg=""; drawHost(); setTimeout(()=>{ if(host.resetArm===que){ host.resetArm=null; drawHost(); } },6000); }
+      else hostReset(que);
+    });
+    return b;
+  };
+  const r1 = el("div",{class:"hreset-op"},[ arm("trivia","Reiniciar la trivia"),
+    el("p",{class:"hnote",text:"Borra todos los intentos y vuelve a abrir la trivia. Conserva las cuentas y la encuesta. Para una ronda de práctica o un segundo grupo."}) ]);
+  const r2 = el("div",{class:"hreset-op"},[ arm("todo","Borrar alumnos y respuestas"),
+    el("p",{class:"hnote",text:"Borra todas las cuentas de alumnos con sus intentos y encuestas, y deja la base limpia para otro colegio. Conserva las cuentas de administración."}) ]);
+  z.append(r1, r2);
+  if(host.resetMsg) z.append(el("p",{class:"ok-msg",id:"host-reset-msg",text:host.resetMsg}));
 }
 function csvCelda(v){ v = v==null ? "" : Array.isArray(v) ? v.join(" | ") : String(v); return '"'+v.replace(/"/g,'""')+'"'; }
 function csvRanking(rk,N){
