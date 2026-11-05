@@ -132,19 +132,14 @@ const RECORRIDA = {
   inicio: "Recorrida: de Lacroze a Monroe",
   paradas: [
     {id:"obrador", n:"El obrador", corto:"Obrador", t:"libertador", donde:"Lacroze",
-     txt:"Arrancamos en el obrador: cómo avanza la obra de todo el tramo Libertador.",
      lat:-34.56270, lng:-58.43720},
     {id:"mcdonalds", n:"McDonald’s", corto:"McDonald’s", t:"libertador", donde:"Tramo Libertador",
-     txt:"Break. Nos cuentan cómo es este McDonald’s y cómo funciona.",
      lat:-34.56037, lng:-58.44622},
     {id:"juramento", n:"Juramento", corto:"Juramento", t:"chino", donde:"Barrio Chino",
-     txt:"La radio de VIAVIVA y algunos datos del paseo.",
      lat:-34.55809, lng:-58.45027},
     {id:"nana", n:"Nana Worlds", corto:"Nana Worlds", t:"chino", donde:"Av. Juramento 1700",
-     txt:"Entramos al local.",
      lat:-34.55836, lng:-58.44995},
     {id:"monroe", n:"Monroe", corto:"Monroe", t:"chino", donde:"Fin del recorrido",
-     txt:"Cierre de la recorrida.",
      lat:-34.55431, lng:-58.45329}
   ]
 };
