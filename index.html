@@ -36,8 +36,13 @@
 <section class="gate" id="gate" hidden aria-label="Ingreso"></section>
 <section class="host" id="host" hidden aria-label="Panel de anfitriona"></section>
 <div class="top"><span class="mono">VIAVIVA -- Colegio Esquiú</span><span class="logo va" role="img" aria-label="VIAVIVA"></span></div>
+<!-- Lo que queda fijo arriba al scrollear: barra del participante y recorrida del día -->
+<div class="stick" id="stick">
 <!-- Barra del participante: nombre y puntaje de la trivia, fija arriba mientras hay sesión -->
 <div class="mebar" id="mebar" hidden aria-live="polite"></div>
+<!-- Recorrida del día: inicio, paradas, destino y "Vos" por GPS (recorrida.js; datos en contenido.js) -->
+<nav class="ruta" id="ruta" hidden aria-label="Recorrida de hoy"></nav>
+</div>
 
 <!-- 01 BIENVENIDA -->
 <section class="sec hero" aria-labelledby="t-hero">
@@ -279,6 +284,8 @@
 <script src="contenido.js"></script>
 <!-- Lógica de la página (mapa, cuentas, trivia, ranking, panel, encuesta) -->
 <script src="app.js"></script>
+<!-- Barra de la recorrida del día con ubicación -->
+<script src="recorrida.js"></script>
 
 </body>
 </html>
