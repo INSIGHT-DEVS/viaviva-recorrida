@@ -29,7 +29,7 @@ Idioma: español rioplatense (vos).
 | `assets/vendor/` | Copia local de supabase-js (`2.45.4`, idéntica byte a byte al archivo del CDN). La página no depende de ningún CDN. |
 | `config.js` | URL y anon key del proyecto de Supabase (públicas por diseño). Si están vacías la app corre en modo práctica, sin cuentas ni ranking. |
 | `supabase/schema.sql` | Base inicial, idempotente. En un proyecto nuevo se aplica primero y después las migraciones, en orden. |
-| `supabase/migrations/` | Cambios posteriores a la base, un archivo por cambio, numerados. `002`: administradores por mail y `admin_resultados()`; `003`: `admin_reset()` (botones de reinicio del panel). Los mails autorizados no van en el repo (se insertan aparte, ver README). |
+| `supabase/migrations/` | Cambios posteriores a la base, un archivo por cambio, numerados. `002`: administradores por mail y `admin_resultados()`; `003`: `admin_reset()` (botones de reinicio del panel); `004`: arreglo de `admin_reset()` (los `DELETE` llevan `WHERE`, que Supabase exige en las RPC). Los mails autorizados no van en el repo (se insertan aparte, ver README). |
 | `assets/` | Imágenes, íconos PWA, logos y fuentes woff2. |
 | `tests/e2e.js` | Prueba de humo con Playwright en dos modos (en vivo y práctica), con el panel de resultados simulado. Se corre con `npm test`. |
 | `vercel.json` | Headers: `noindex` (la página no aparece en Google) y `no-cache` para html, js y css. |
