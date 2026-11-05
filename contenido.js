@@ -133,9 +133,9 @@ const RECORRIDA = {
   paradas: [
     {id:"obrador", n:"El obrador", corto:"Obrador", t:"libertador", donde:"Lacroze",
      lat:-34.56270, lng:-58.43720},
-    {id:"mcdonalds", n:"McDonald’s", corto:"McDonald’s", t:"libertador", donde:"Tramo Libertador",
+    {id:"mcdonalds", n:"McDonald’s", corto:"McDonald’s", t:"libertador", donde:"VIAVIVA Libertador",
      lat:-34.56037, lng:-58.44622},
-    {id:"juramento", n:"Juramento", corto:"Juramento", t:"chino", donde:"Barrio Chino",
+    {id:"juramento", n:"Juramento", corto:"Juramento", t:"chino", donde:"VIAVIVA Barrio Chino",
      lat:-34.55809, lng:-58.45027},
     {id:"nana", n:"Nana Worlds", corto:"Nana Worlds", t:"chino", donde:"Av. Juramento 1700",
      lat:-34.55836, lng:-58.44995},
