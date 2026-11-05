@@ -123,3 +123,28 @@ const ENCUESTA = [
   {id:"falta", q:"¿Qué le falta a VIAVIVA, o a Buenos Aires, para la gente de tu edad?", type:"long", req:false},
   {id:"edad", q:"¿Cuántos años tenés?", type:"single", req:true, o:["13 o 14","15 o 16","17 o 18"]}
 ];
+
+// Recorrida del día: barra fija arriba con inicio, paradas y destino, y el punto "Vos" por GPS
+// (lógica en recorrida.js). Paradas en el orden en que se caminan. t = tramo (color en la barra).
+// lat/lng: en Google Maps, clic derecho sobre el lugar → copiar las coordenadas. null = sin barra.
+const RECORRIDA = {
+  titulo: "Recorrida de hoy",
+  inicio: "Recorrida: de Lacroze a Monroe",
+  paradas: [
+    {id:"obrador", n:"El obrador", corto:"Obrador", t:"libertador", donde:"Lacroze",
+     txt:"Arrancamos en el obrador: cómo avanza la obra de todo el tramo Libertador.",
+     lat:-34.56270, lng:-58.43720},
+    {id:"mcdonalds", n:"McDonald’s", corto:"McDonald’s", t:"libertador", donde:"Tramo Libertador",
+     txt:"Break. Nos cuentan cómo es este McDonald’s y cómo funciona.",
+     lat:-34.56037, lng:-58.44622},
+    {id:"juramento", n:"Juramento", corto:"Juramento", t:"chino", donde:"Barrio Chino",
+     txt:"La radio de VIAVIVA y algunos datos del paseo.",
+     lat:-34.55809, lng:-58.45027},
+    {id:"nana", n:"Nana Worlds", corto:"Nana Worlds", t:"chino", donde:"Av. Juramento 1700",
+     txt:"Entramos al local.",
+     lat:-34.55836, lng:-58.44995},
+    {id:"monroe", n:"Monroe", corto:"Monroe", t:"chino", donde:"Fin del recorrido",
+     txt:"Cierre de la recorrida.",
+     lat:-34.55431, lng:-58.45329}
+  ]
+};
