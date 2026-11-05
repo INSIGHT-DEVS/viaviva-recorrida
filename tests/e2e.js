@@ -126,6 +126,23 @@ async function correr(browser, modo) {
     check('elegir un interés marca oficios "Para vos"', (await page.locator('#groups .of.hit').count()) >= 1);
     check('trivia en modo práctica avisa que falta Supabase', (await page.locator('#tv').innerText()).includes('no está conectada'));
     check('encuesta en modo práctica abre el Google Form', (await page.locator('#survey').innerHTML()).includes('forms.gle'));
+    // Recorrida del día (#ruta): barra fija con las paradas; ?ruta=lat,lng simula la ubicación.
+    const ruta = page.locator('#ruta');
+    check('recorrida: barra visible con 5 paradas', await ruta.isVisible() && (await ruta.locator('.ruta-stop').count()) === 5);
+    check('recorrida: queda fija arriba', await page.evaluate(() => getComputedStyle(document.querySelector('#stick')).position === 'sticky'));
+    await page.locator('#ruta-tg').click();
+    check('recorrida: tocar la barra abre el detalle de paradas', await page.locator('#ruta-list').isVisible() && (await page.locator('#ruta-list li').count()) === 5);
+    const sim = async (q) => { await page.goto(base + '/?ruta=' + q, { waitUntil: 'load' }); await page.waitForTimeout(300); return page.locator('.ruta-st').innerText(); };
+    let rs = await sim('-34.55923,-58.44825');
+    check('recorrida: entre dos paradas marca "Vos" y lo que falta', /entre mcdonald.s y juramento/i.test(rs) && /faltan/.test(rs) && (await page.locator('.ruta-you').count()) === 1, rs);
+    rs = await sim('-34.56037,-58.44622');
+    check('recorrida: en una parada dice "Estás en …"', /estás en mcdonald/i.test(rs), rs);
+    rs = await sim('-34.55836,-58.44995');
+    check('recorrida: distingue dos paradas vecinas (Nana Worlds)', /estás en nana worlds/i.test(rs), rs);
+    rs = await sim('-34.55431,-58.45329');
+    check('recorrida: en el destino dice "Llegaste"', /llegaste: monroe/i.test(rs), rs);
+    rs = await sim('-34.5810,-58.4210');
+    check('recorrida: lejos del paseo avisa que está fuera', /fuera del recorrido/i.test(rs) && (await page.locator('.ruta-you').count()) === 0, rs);
     await page.goto(base + '/#anfitrion', { waitUntil: 'load' });
     await page.waitForTimeout(400);
     check('panel #anfitrion visible', await page.locator('#host').isVisible() && (await page.locator('#host').innerText()).length > 20);
