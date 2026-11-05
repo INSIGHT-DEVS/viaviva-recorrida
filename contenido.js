@@ -124,20 +124,44 @@ const ENCUESTA = [
   {id:"edad", q:"¿Cuántos años tenés?", type:"single", req:true, o:["13 o 14","15 o 16","17 o 18"]}
 ];
 
-// Recorrida del día: barra fija arriba con inicio, paradas y destino, y el punto "Vos" por GPS
-// (lógica en recorrida.js). Paradas en el orden en que se caminan. t = tramo (color en la barra).
-// lat/lng: en Google Maps, clic derecho sobre el lugar → copiar las coordenadas. null = sin barra.
+// Recorrida del día: barra fija arriba con todo VIAVIVA (calles y tramos), las paradas de la visita
+// y el punto "Vos" por GPS (lógica en recorrida.js). null = sin barra.
+// lat/lng: en Google Maps, mantener apretado el lugar → copiar las coordenadas.
 const RECORRIDA = {
   titulo: "Recorrida de hoy",
   inicio: "Recorrida: de Lacroze a Monroe",
+  // Calles en orden, de Monroe a Dorrego, con el cruce de cada una con las vías (aproximado).
+  // ancho: cuántas cuadras ocupa en la barra el tramo que llega a esa calle (Olleros–Dorrego es largo).
+  calles: [
+    {n:"Monroe", lat:-34.55431, lng:-58.45329},
+    {n:"Blanco Encalada", corto:"B. Encalada", lat:-34.55526, lng:-58.45247},
+    {n:"Olazábal", lat:-34.55624, lng:-58.45167},
+    {n:"Mendoza", lat:-34.55713, lng:-58.45089},
+    {n:"Juramento", lat:-34.55805, lng:-58.45001},
+    {n:"Echeverría", lat:-34.55893, lng:-58.44922},
+    {n:"Sucre", lat:-34.55982, lng:-58.44830},
+    {n:"La Pampa", lat:-34.56070, lng:-58.44700},
+    {n:"José Hernández", corto:"J. Hernández", lat:-34.56102, lng:-58.44534},
+    {n:"Virrey del Pino", corto:"V. del Pino", lat:-34.56134, lng:-58.44368},
+    {n:"Virrey Loreto", corto:"V. Loreto", lat:-34.56166, lng:-58.44203},
+    {n:"Zabala", lat:-34.56193, lng:-58.44058},
+    {n:"Teodoro García", corto:"T. García", lat:-34.56230, lng:-58.43867},
+    {n:"Federico Lacroze", corto:"Lacroze", lat:-34.56252, lng:-58.43751},
+    {n:"Olleros", lat:-34.56280, lng:-58.43609},
+    {n:"Dorrego", ancho:4, lat:-34.56950, lng:-58.42300}
+  ],
+  tramos: [
+    {t:"chino", de:"Monroe", a:"La Pampa"},
+    {t:"libertador", de:"La Pampa", a:"Olleros"},
+    {t:"hipodromo", de:"Olleros", a:"Dorrego"}
+  ],
+  // Paradas en el orden en que se caminan.
   paradas: [
-    {id:"obrador", n:"El obrador", corto:"Obrador", t:"libertador", donde:"Lacroze",
-     lat:-34.56270, lng:-58.43720},
+    {id:"obrador", n:"El obrador", corto:"Obrador", t:"libertador", donde:"Federico Lacroze",
+     lat:-34.56252, lng:-58.43751},
     {id:"mcdonalds", n:"McDonald’s", corto:"McDonald’s", t:"libertador", donde:"VIAVIVA Libertador",
      lat:-34.56037, lng:-58.44622},
-    {id:"juramento", n:"Juramento", corto:"Juramento", t:"chino", donde:"VIAVIVA Barrio Chino",
-     lat:-34.55809, lng:-58.45027},
-    {id:"nana", n:"Nana Worlds", corto:"Nana Worlds", t:"chino", donde:"Av. Juramento 1700",
+    {id:"nana", n:"Nana Worlds", corto:"Nana Worlds", t:"chino", donde:"VIAVIVA Barrio Chino",
      lat:-34.55836, lng:-58.44995},
     {id:"monroe", n:"Monroe", corto:"Monroe", t:"chino", donde:"Fin del recorrido",
      lat:-34.55431, lng:-58.45329}
