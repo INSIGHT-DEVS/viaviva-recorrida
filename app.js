@@ -753,8 +753,9 @@ function drawSurvey(){
   const d = sv.draft||{};
   const form = el("form",{class:"sv",id:"sv-form",novalidate:""});
   ENCUESTA.forEach((q,qi)=>{
-    const fs = el("fieldset",{id:"sv-f-"+q.id,class:svBad.includes(q.id)?"bad":""});
-    const lg = el("legend",{},[el("span",{class:"n",text:"Pregunta "+(qi+1)+" de "+ENCUESTA.length})]);
+    // Sin <fieldset>/<legend>: Safari los dibuja a su manera (la leyenda queda corrida sobre el borde).
+    const fs = el("div",{id:"sv-f-"+q.id,class:"sv-f"+(svBad.includes(q.id)?" bad":""),role:"group","aria-labelledby":"sv-q-"+q.id});
+    const lg = el("div",{class:"sv-q",id:"sv-q-"+q.id},[el("span",{class:"n",text:"Pregunta "+(qi+1)+" de "+ENCUESTA.length})]);
     lg.appendChild(document.createTextNode(q.q+" "));
     if(!q.req) lg.appendChild(el("span",{class:"opt",text:"(opcional)"}));
     fs.appendChild(lg);
