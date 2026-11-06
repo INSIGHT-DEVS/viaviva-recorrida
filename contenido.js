@@ -167,3 +167,17 @@ const RECORRIDA = {
      lat:-34.55431, lng:-58.45329}
   ]
 };
+
+// Menú de secciones (botón ☰ de la barra de arriba): número, nombre y el id de la sección en index.html.
+const SECCIONES = [
+  {n:"01", t:"Bienvenida", id:"inicio"},
+  {n:"02", t:"Manifiesto", id:"manifiesto"},
+  {n:"03", t:"Así es el recorrido", id:"recorrido-mapa"},
+  {n:"04", t:"La historia: antes y después", id:"antes-despues"},
+  {n:"05", t:"Backstage: ¿quién hace VIAVIVA?", id:"oficios"},
+  {n:"06", t:"¿Qué es VIAVIVA hoy?", id:"hoy"},
+  {n:"07", t:"Los tramos y el mapa", id:"mapa"},
+  {n:"08", t:"Trivia", id:"trivia"},
+  {n:"09", t:"Tu opinión", id:"opinion"},
+  {n:"10", t:"Seguinos", id:"seguinos"}
+];
