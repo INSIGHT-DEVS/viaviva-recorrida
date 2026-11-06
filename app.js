@@ -164,11 +164,17 @@ function drawAll(){ drawGate(); drawMeBar(); drawTrivia(); drawRank(); drawSurve
 function myName(){ return me.estado ? cleanName(me.estado.nombre+" "+me.estado.apellido) : ""; }
 
 /* ---------- Barra del participante (#mebar): nombre y puntaje, arriba de todo ---------- */
+let menuOpen = false;
 function drawMeBar(){
   const bar = $("#mebar"); if(!bar) return;
-  const show = LIVE && !!me.session && !me.loading;
+  // Con Supabase, la barra aparece recién con sesión (antes la tapa el ingreso); en modo práctica siempre.
+  const show = LIVE ? (!!me.session && !me.loading) : true;
   bar.hidden = !show; bar.innerHTML = "";
-  if(!show) return;
+  if(!show){ menuOpen = false; drawMenu(); return; }
+  const mb = el("button",{type:"button",class:"menu-btn",id:"menu-btn","aria-label":"Secciones de la página","aria-expanded":menuOpen?"true":"false","aria-controls":"menu"},[el("i"),el("i"),el("i")]);
+  mb.addEventListener("click",(e)=>{ e.stopPropagation(); menuOpen=!menuOpen; drawMeBar(); });
+  bar.append(mb);
+  if(!LIVE){ bar.append(el("span",{class:"nm",text:"Vamos a VIAVIVA"})); drawMenu(); return; }
   const esAdmin = me.estado && me.estado.es_admin;
   const it = (tv.phase==="done" && tv.result) ? Object.assign({estado:"terminado"}, tv.result) : (me.estado && me.estado.intento);
   let txt, href = "#trivia", done = false;
@@ -177,7 +183,24 @@ function drawMeBar(){
   else if(it && it.estado==="jugando"){ txt = "Trivia en curso"; }
   else txt = (me.estado && me.estado.abierta===false) ? "Trivia cerrada" : "Trivia pendiente";
   bar.append(el("span",{class:"nm",text: myName() || "Tu cuenta"}), el("a",{class:"sc"+(done?" done":""),href,text:txt}));
+  drawMenu();
 }
+/* Menú de secciones (SECCIONES en contenido.js): anclas a cada sección; se cierra al elegir, al tocar afuera o con Escape. */
+function drawMenu(){
+  const m = $("#menu"); if(!m) return;
+  m.hidden = !menuOpen; m.innerHTML = "";
+  if(!menuOpen) return;
+  const ol = el("ol");
+  (typeof SECCIONES !== "undefined" ? SECCIONES : []).forEach(sec=>{
+    if(!document.getElementById(sec.id)) return;
+    const a = el("a",{href:"#"+sec.id},[el("span",{class:"mono",text:sec.n}), el("span",{text:sec.t})]);
+    a.addEventListener("click",()=>{ menuOpen=false; drawMeBar(); });
+    ol.append(el("li",{},[a]));
+  });
+  m.append(ol);
+}
+document.addEventListener("click",(e)=>{ if(menuOpen && !e.target.closest("#menu") && !e.target.closest("#menu-btn")){ menuOpen=false; drawMeBar(); } });
+document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && menuOpen){ menuOpen=false; drawMeBar(); $("#menu-btn")?.focus(); } });
 // Mantiene el puntaje y la posición al día (otros siguen terminando) sin recargar.
 async function refreshEstado(){
   if(!LIVE || !me.session || document.hidden) return;

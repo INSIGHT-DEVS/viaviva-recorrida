@@ -40,12 +40,14 @@
 <div class="stick" id="stick">
 <!-- Barra del participante: nombre y puntaje de la trivia, fija arriba mientras hay sesión -->
 <div class="mebar" id="mebar" hidden aria-live="polite"></div>
+<!-- Menú de secciones: se despliega desde el botón de la barra de arriba (lista en contenido.js, SECCIONES) -->
+<div class="menu" id="menu" hidden></div>
 <!-- Recorrida del día: inicio, paradas, destino y "Vos" por GPS (recorrida.js; datos en contenido.js) -->
 <nav class="ruta" id="ruta" hidden aria-label="Recorrida de hoy"></nav>
 </div>
 
 <!-- 01 BIENVENIDA -->
-<section class="sec hero" aria-labelledby="t-hero">
+<section class="sec hero" id="inicio" aria-labelledby="t-hero">
   <div class="rail" aria-hidden="true"><span>01</span><span>Bienvenida</span></div>
   <div class="inner">
     <div class="hero-grid">
@@ -66,7 +68,7 @@
 </section>
 
 <!-- 02 MANIFIESTO -->
-<section class="sec manifesto on-brand" aria-label="Manifiesto">
+<section class="sec manifesto on-brand" id="manifiesto" aria-label="Manifiesto">
   <div class="rail" aria-hidden="true"><span>02</span><span>Manifiesto</span></div>
   <div class="inner">
     <span class="eyebrow">Manifiesto</span>
@@ -257,7 +259,7 @@
 </section>
 
 <!-- 10 SEGUINOS -->
-<section class="sec final on-brand" aria-labelledby="t-fin">
+<section class="sec final on-brand" id="seguinos" aria-labelledby="t-fin">
   <div class="rail" aria-hidden="true"><span>10</span><span>Seguinos</span></div>
   <div class="inner" style="gap:28px">
     <h2 id="t-fin">Vamos a<br>VIAVIVA.</h2>

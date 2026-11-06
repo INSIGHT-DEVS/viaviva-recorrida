@@ -67,6 +67,16 @@ async function correr(browser, modo) {
     mb = await page.locator('#mebar').innerText();
     check('barra del participante: puntaje y puesto al terminar', /trivia 7\/10 · 3°/i.test(mb), mb);
     check('barra del participante: queda fija arriba', await page.evaluate(() => getComputedStyle(document.querySelector('#mebar')).position === 'sticky'));
+    // Menú de secciones: botón en la barra, lista con anclas a secciones que existen, cierra al elegir.
+    check('menú: botón en la barra y lista cerrada', (await page.locator('#menu-btn').count()) === 1 && !(await page.locator('#menu').isVisible()));
+    await page.click('#menu-btn'); await page.waitForTimeout(200);
+    const links = await page.locator('#menu a').evaluateAll(as => as.map(a => a.getAttribute('href')));
+    const existen = await page.evaluate(hs => hs.every(h => !!document.getElementById(h.slice(1))), links);
+    check('menú: 10 secciones y todas las anclas existen', (await page.locator('#menu').isVisible()) && links.length === 10 && existen, links.join(' '));
+    await page.locator('#menu a[href="#trivia"]').click(); await page.waitForTimeout(300);
+    check('menú: elegir una sección cierra el menú y lleva a la ancla', !(await page.locator('#menu').isVisible()) && (await page.evaluate(() => location.hash)) === '#trivia');
+    await page.click('#menu-btn'); await page.keyboard.press('Escape'); await page.waitForTimeout(100);
+    check('menú: Escape lo cierra', !(await page.locator('#menu').isVisible()));
     await page.evaluate(() => { me.estado.es_admin = true; drawAll(); });
     mb = await page.locator('#mebar').innerText();
     check('barra del participante: para admins lleva al panel', /panel de anfitriona/i.test(mb) && (await page.locator('#mebar a').getAttribute('href')) === '#anfitrion', mb);
@@ -115,6 +125,7 @@ async function correr(browser, modo) {
     check('segundo toque llama al servidor (sin red avisa y no rompe)', /sin conexión|no se pudo/i.test(rmsg), rmsg);
   } else {
     check('sin Supabase no hay ingreso general', !(await page.locator('#gate').isVisible()));
+    check('en modo práctica la barra de arriba muestra el menú igual', (await page.locator('#mebar').isVisible()) && (await page.locator('#menu-btn').count()) === 1);
     check('mapa SVG con 6 puntos', (await page.locator('#map g.pin').count()) === 6);
     await page.click('g.pin[data-id="pampa"]');
     await page.waitForTimeout(200);
