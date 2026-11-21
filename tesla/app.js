@@ -52,9 +52,11 @@ function drawMap(){
     ln.style.stroke = `var(${TRAMOS[s.t].color})`; svg.appendChild(ln);
   });
   for(let y=46;y<585;y+=14) svg.appendChild(el("line",{x1:X-10,x2:X+10,y1:y,y2:y,stroke:"var(--card)","stroke-width":2}));
-  [["chino",160,"Barrio Chino"],["libertador",405,"Libertador"],["hipodromo",528,"Hipódromo"]].forEach(([t,y,n])=>{
+  // District names (in English, TRAMOS[t].corto) along the left edge, centred on each segment.
+  SEG.forEach(s=>{
+    const y = (s.y1+s.y2)/2, n = TRAMOS[s.t].corto || TRAMOS[s.t].nombre;
     const tx = el("text",{x:22,y:y,"text-anchor":"middle",transform:`rotate(-90 22 ${y})`,text:n.toUpperCase()});
-    tx.style.fill=`var(${TRAMOS[t].color})`; tx.style.fontWeight="500"; tx.style.letterSpacing=".12em"; tx.style.fontSize="12px";
+    tx.style.fill=`var(${TRAMOS[s.t].color})`; tx.style.fontWeight="500"; tx.style.letterSpacing=".12em"; tx.style.fontSize="12px";
     svg.appendChild(tx);
   });
   PUNTOS.forEach(p=>{

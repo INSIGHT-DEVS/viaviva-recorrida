@@ -193,8 +193,18 @@ async function tesla(page, base) {
   const ruta = await page.locator('#ruta .ruta-txt').innerText();
   check('tesla: estado de la recorrida en inglés', /Between .* and .*/.test(ruta) && / to /.test(ruta), ruta.replace(/\s+/g, ' '));
   check('tesla: el mapa esquemático abre en Tesla', (await page.locator('#panel h3').innerText()).includes('Tesla') && (await page.locator('g.pin[data-id="tesla"].active').count()) === 1);
-  await page.click('g.pin[data-id="pampa"]'); await page.waitForTimeout(200);
-  check('tesla: tocar un punto del mapa cambia el panel', (await page.locator('#panel h3').innerText()).includes('crossing gate'));
+  await page.click('g.pin[data-id="lisandro"]'); await page.waitForTimeout(200);
+  check('tesla: tocar un punto del mapa cambia el panel (estación Lisandro de la Torre)', (await page.locator('#panel h3').innerText()).includes('station'));
+  const mapa = await page.evaluate(() => {
+    const textos = [...document.querySelectorAll('#map text')].map(t => t.textContent);
+    const pins = [...document.querySelectorAll('#map g.pin')].map(g => g.dataset.id);
+    const rojo = [...document.querySelectorAll('#map line')].find(l => l.style.stroke === 'var(--t-chino)' && l.getAttribute('stroke-width') === '12');
+    const pampaY = [...document.querySelectorAll('#map text')].find(t => t.textContent === 'La Pampa');
+    return { sectores: ['CHINATOWN', 'LIBERTADOR', 'RACETRACK'].every(n => textos.includes(n)), sinPampa: !pins.includes('pampa'), conLisandro: pins.includes('lisandro') && textos.includes('Lisandro de la Torre'),
+             rojoHastaLaPampa: !!rojo && !!pampaY && Math.abs(parseFloat(rojo.getAttribute('y2')) - (parseFloat(pampaY.getAttribute('y')) - 4)) < 1,
+             sinParrafo: !/Many people call it/.test(document.body.innerText) };
+  });
+  check('tesla: mapa vertical con sectores en inglés, rojo hasta La Pampa, sin La Pampa y con Lisandro de la Torre; párrafo de Barrio Chino quitado', Object.values(mapa).every(Boolean), JSON.stringify(mapa));
   const marcas = await page.locator('.marca').evaluateAll(es => es.map(e => e.innerText));
   check('tesla: 7 marcas con Tesla destacada', marcas.length === 7 && (await page.locator('.marca.cliente').innerText()) === 'TESLA', marcas.join(', '));
   check('tesla: 5 datos de Libertador', (await page.locator('#lib-facts .fact').count()) === 5);
