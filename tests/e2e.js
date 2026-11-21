@@ -178,8 +178,12 @@ async function tesla(page, base) {
   check('tesla: sin ingreso, trivia, encuesta ni oficios', await page.evaluate(() => !document.querySelector('#gate') && !document.querySelector('#trivia') && !document.querySelector('#survey') && !document.querySelector('#oficios')));
   const es = await page.evaluate(() => (document.body.innerText.match(/\b(Ubicarme|Tocá|Estás|Recorrida|Volver|Paso \d|Contanos|Trivia)\b/g) || []));
   check('tesla: sin textos en castellano en la interfaz', es.length === 0, es.join(', '));
-  const paradas = await page.locator('.ruta-stop').evaluateAll(es => es.map(e => ({ nombre: e.querySelector('small').textContent, logo: !!e.querySelector('.ruta-logo') })));
-  check('tesla: recorrida con 4 paradas y Tesla primera', paradas.length === 4 && paradas[0].nombre === 'Tesla' && paradas[0].logo, paradas.map(p => p.nombre).join(' · '));
+  const paradas = await page.locator('.ruta-stop').evaluateAll(es => es.map(e => ({ texto: e.innerText.trim(), logo: !!e.querySelector('.ruta-logo') })));
+  check('tesla: recorrida con 4 paradas sin nombre y el isotipo en la primera', paradas.length === 4 && paradas[0].logo && paradas.every(p => p.texto === ''), JSON.stringify(paradas));
+  const tramos = await page.locator('.ruta-tramo').evaluateAll(es => es.sort((a, b) => parseFloat(a.style.left) - parseFloat(b.style.left)).map(e => e.innerText));
+  check('tesla: los sectores debajo de la línea, en inglés', tramos.join('|') === 'Chinatown|Libertador|Racetrack', tramos.join(' · '));
+  const cifras = await page.evaluate(() => ({ cuatro: /4 km under the Mitre railway/.test(document.body.innerText) && /Four kilometres/.test(document.body.innerText), viejas: /4\.5 km|3\.9 km|Four and a half/.test(document.body.innerText), chino: /1,000,000[\s\S]{0,60}Barrio Chino/.test(document.querySelector('#hoy').innerText) && /Footfall/i.test(document.querySelector('#mapa').innerText) }));
+  check('tesla: 4 km en todas las cifras y el millón de personas de Barrio Chino', cifras.cuatro && !cifras.viejas && cifras.chino, JSON.stringify(cifras));
   const marcador = await page.evaluate(() => {
     const s = document.querySelector('.ruta-stop.con-logo'); if (!s) return null;
     const im = s.querySelector('img.ruta-logo');

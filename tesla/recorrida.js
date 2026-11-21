@@ -125,7 +125,8 @@
     }
     box.append(head);
 
-    // Mapa lineal: todas las calles (arriba), la línea por tramos, las paradas (abajo) y "Vos".
+    // Mapa lineal: todas las calles (arriba), la línea por tramos, las paradas sobre la línea, los nombres
+    // de los tramos (abajo, en inglés) y "Vos".
     const map = mk("div","ruta-map"); map.setAttribute("aria-hidden","true");
     for(let i=0;i<nC-1;i++){
       const s = mk("i","ruta-seg "+(tramoSeg[i]||""));
@@ -133,6 +134,13 @@
       s.style.setProperty("--sc", color(tramoSeg[i]));
       map.append(s);
     }
+    (R.tramos||[]).forEach(tr=>{
+      const a = idx(tr.de), b = idx(tr.a); if(a<0 || b<0) return;
+      const lb = mk("span","ruta-tramo", (TRAMOS[tr.t]||{}).corto || nombreTramo(tr.t));
+      lb.style.left = (xC[a]+xC[b])/2+"%"; lb.style.color = color(tr.t);
+      if(onRoute && L.tramo===tr.t) lb.classList.add("near");
+      map.append(lb);
+    });
     C.forEach((c,i)=>{
       const near = onRoute && (L.enCalle===i || (L.enCalle==null && (i===L.i || i===L.i+1)));
       const lb = mk("span","ruta-calle"+(near?" near":""), c.corto || c.n); lb.style.left = xC[i]+"%";
@@ -146,15 +154,14 @@
       if(onRoute && L.at===k) d.classList.add("here");
       if(onRoute && L.at!==k && k===L.next && reached<stops.length-1) d.classList.add("next");
       if(k===0) d.classList.add("first"); if(k===stops.length-1) d.classList.add("last");
-      if(p.x < 6) d.classList.add("al-izq"); if(p.x > 94) d.classList.add("al-der");
       // A stop with a brand isotype shows only the image on the line (no dot, no text). If the file fails to load,
-      // the stop falls back to the ordinary dot with its name. A stop with "marca" but no logo shows a text pill.
+      // the stop falls back to the ordinary dot. A stop with "marca" but no logo shows a text pill.
       if(p.logo || p.marca){
         d.classList.add("con-logo");
         if(p.logo){ const im = mk("img","ruta-logo"); im.src=p.logo; im.alt=p.marca||p.n; im.onerror=()=>{ im.remove(); d.classList.remove("con-logo"); }; d.append(im); }
         else d.append(mk("span","ruta-marca",p.marca));
       }
-      d.append(mk("b"), mk("small",null,p.corto || p.n));
+      d.append(mk("b"));   // no name under the stop: the district names go there
       map.append(d);
     });
     if(onRoute){
@@ -163,7 +170,6 @@
       map.append(you);
     }
     box.append(map);
-    separarEtiquetas(map);
 
     // Detalle de cada parada (se abre tocando la barra).
     const list = mk("ol","ruta-list"); list.id="ruta-list"; list.hidden = !st.open;
@@ -181,15 +187,6 @@
   }
 
   // Si los nombres de dos paradas vecinas se pisan, el de la derecha se corre hacia la derecha.
-  function separarEtiquetas(map){
-    // Stops that show an isotype have their name hidden, so they take no part in the label spacing.
-    const ls = [...map.querySelectorAll(".ruta-stop")].filter(s=>!s.classList.contains("con-logo")).sort((a,b)=>parseFloat(a.style.left)-parseFloat(b.style.left));
-    for(let k=1;k<ls.length;k++){
-      const a = ls[k-1].querySelector("small").getBoundingClientRect(), b = ls[k].querySelector("small").getBoundingClientRect();
-      if(a.right + 6 > b.left && !ls[k].classList.contains("al-der")) ls[k].classList.add("al-izq");
-    }
-  }
-
   /* ---- GPS ---- */
   function startGps(){
     if(!("geolocation" in navigator)){ st.gps="nodisp"; st.err="This browser does not allow location."; draw(); return; }

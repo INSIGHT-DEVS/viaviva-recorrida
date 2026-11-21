@@ -12,10 +12,11 @@ const CLIENTE = {
   visita:"Site visit · VIAVIVA Libertador"
 };
 
+// "corto" is the district name shown under the line of the live route bar (in English).
 const TRAMOS = {
-  chino:{nombre:"VIAVIVA Barrio Chino",color:"--t-chino",logo:"lg-chino",calles:"Monroe to Sucre"},
-  libertador:{nombre:"VIAVIVA Libertador",color:"--t-lib",logo:"lg-lib",calles:"La Pampa to Olleros"},
-  hipodromo:{nombre:"VIAVIVA Hipódromo",color:"--t-hip",logo:"lg-hip",calles:"Olleros to Dorrego"}
+  chino:{nombre:"VIAVIVA Barrio Chino",corto:"Chinatown",color:"--t-chino",logo:"lg-chino",calles:"Monroe to Sucre"},
+  libertador:{nombre:"VIAVIVA Libertador",corto:"Libertador",color:"--t-lib",logo:"lg-lib",calles:"La Pampa to Olleros"},
+  hipodromo:{nombre:"VIAVIVA Hipódromo",corto:"Racetrack",color:"--t-hip",logo:"lg-hip",calles:"Olleros to Dorrego"}
 };
 
 // Schematic map (section "The three districts"): streets, colored segments and the points you can tap.

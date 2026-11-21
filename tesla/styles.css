@@ -429,10 +429,10 @@ html{scroll-padding-top:var(--stick-h,0px)}
 .ruta-gps:hover{background:var(--green-dark)}
 .ruta-acc{flex:none;font-family:var(--mono);font-size:10.5px;color:var(--muted)}
 /* Mapa lineal: calles arriba (verticales, como el mapa oficial), línea por tramos, paradas abajo */
-.ruta-map{position:relative;height:106px;margin:2px 8px 0}
+.ruta-map{position:relative;height:108px;margin:2px 8px 0}
 .ruta-seg{position:absolute;top:74px;height:5px;--sc:var(--green);background:var(--sc)}
 .ruta-seg.chino,.ruta-seg.libertador{background:repeating-linear-gradient(90deg,var(--sc) 0 7px,transparent 7px 10px)}
-.ruta-calle{position:absolute;bottom:47px;writing-mode:vertical-rl;transform:translateX(-50%) rotate(180deg);font-size:9.5px;line-height:1;white-space:nowrap;color:var(--muted)}
+.ruta-calle{position:absolute;bottom:49px;writing-mode:vertical-rl;transform:translateX(-50%) rotate(180deg);font-size:9.5px;line-height:1;white-space:nowrap;color:var(--muted)}
 .ruta-calle.near{color:var(--ink);font-weight:700}
 .ruta-tick{position:absolute;top:71px;width:1px;height:11px;background:var(--line);transform:translateX(-50%)}
 .ruta-stop{position:absolute;top:68px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;--c:var(--green);z-index:1}
@@ -453,9 +453,9 @@ html{scroll-padding-top:var(--stick-h,0px)}
 .ruta-list .mono{display:block;font-size:10.5px;color:var(--muted)}
 .ruta-list b{font-weight:500;font-size:16px}
 .ruta-note{font-size:12px;color:var(--muted);margin-top:2px}
-@media (min-width:700px){.ruta-calle{font-size:11px}.ruta-map{height:118px}.ruta-calle{bottom:47px}.ruta-seg{top:86px}.ruta-tick{top:83px}.ruta-stop{top:80px}.ruta-you{top:81px}}
+@media (min-width:700px){.ruta-calle{font-size:11px}.ruta-map{height:120px}.ruta-tramo{top:105px;font-size:12px}.ruta-calle{bottom:49px}.ruta-seg{top:86px}.ruta-tick{top:83px}.ruta-stop{top:80px}.ruta-you{top:81px}}
 @media (min-width:1100px){.ruta{padding-inline:max(48px,calc((100% - 1320px)/2 + 48px))}.ruta-map{max-width:900px}}
-@media (max-width:360px){.ruta-calle{font-size:8.5px}.ruta-stop small{font-size:9.5px}}
+@media (max-width:360px){.ruta-calle{font-size:8.5px}.ruta-stop small{font-size:9.5px}.ruta-tramo{font-size:10px}}
 
 /* ===== Client visit edition ===== */
 .mebar .sc.lib{background:transparent}
@@ -464,6 +464,9 @@ html{scroll-padding-top:var(--stick-h,0px)}
 .marca{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:9px 14px;border:1.5px solid var(--ink);background:var(--card);color:var(--ink)}
 .marca.cliente{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:500}
 .pin-cliente .ring{stroke-width:4}
+/* District names under the line of the live route bar (the stops carry no name in this edition) */
+.ruta-tramo{position:absolute;top:93px;transform:translateX(-50%);font-size:11px;font-weight:700;line-height:1;letter-spacing:.01em;white-space:nowrap}
+.ruta-tramo.near{text-decoration:underline;text-underline-offset:3px}
 /* Brand isotype on the live route bar: replaces the dot and the name of a stop that has "logo" (image only, no text) */
 .ruta-stop.con-logo b,.ruta-stop.con-logo small{display:none}
 .ruta-stop .ruta-logo{display:block;width:34px;height:34px;object-fit:contain;background:var(--card);border:2px solid var(--c);border-radius:50%;padding:5px;box-sizing:border-box;margin-top:-9px;position:relative;z-index:1}
