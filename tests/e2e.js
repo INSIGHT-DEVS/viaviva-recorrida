@@ -178,9 +178,14 @@ async function tesla(page, base) {
   check('tesla: sin ingreso, trivia, encuesta ni oficios', await page.evaluate(() => !document.querySelector('#gate') && !document.querySelector('#trivia') && !document.querySelector('#survey') && !document.querySelector('#oficios')));
   const es = await page.evaluate(() => (document.body.innerText.match(/\b(Ubicarme|Tocá|Estás|Recorrida|Volver|Paso \d|Contanos|Trivia)\b/g) || []));
   check('tesla: sin textos en castellano en la interfaz', es.length === 0, es.join(', '));
-  const paradas = await page.locator('.ruta-stop small').evaluateAll(es => es.map(e => e.innerText));
-  check('tesla: recorrida con 4 paradas y Tesla primera', paradas.length === 4 && paradas[0] === 'Tesla', paradas.join(' · '));
-  check('tesla: marcador de Tesla en el mapa en vivo (isologo o etiqueta)', (await page.locator('.ruta-stop.con-logo').count()) === 1 && (await page.locator('.ruta-stop.con-logo .ruta-logo, .ruta-stop.con-logo .ruta-marca').count()) === 1);
+  const paradas = await page.locator('.ruta-stop').evaluateAll(es => es.map(e => ({ nombre: e.querySelector('small').textContent, logo: !!e.querySelector('.ruta-logo') })));
+  check('tesla: recorrida con 4 paradas y Tesla primera', paradas.length === 4 && paradas[0].nombre === 'Tesla' && paradas[0].logo, paradas.map(p => p.nombre).join(' · '));
+  const marcador = await page.evaluate(() => {
+    const s = document.querySelector('.ruta-stop.con-logo'); if (!s) return null;
+    const im = s.querySelector('img.ruta-logo');
+    return { uno: document.querySelectorAll('.ruta-stop.con-logo').length === 1, cargado: !!im && im.complete && im.naturalWidth > 0, textoVisible: s.innerText.trim(), sinEtiqueta: !s.querySelector('.ruta-marca') };
+  });
+  check('tesla: el isotipo carga y la parada no muestra texto', !!marcador && marcador.uno && marcador.cargado && marcador.textoVisible === '' && marcador.sinEtiqueta, JSON.stringify(marcador));
   const ruta = await page.locator('#ruta .ruta-txt').innerText();
   check('tesla: estado de la recorrida en inglés', /Between .* and .*/.test(ruta) && / to /.test(ruta), ruta.replace(/\s+/g, ' '));
   check('tesla: el mapa esquemático abre en Tesla', (await page.locator('#panel h3').innerText()).includes('Tesla') && (await page.locator('g.pin[data-id="tesla"].active').count()) === 1);

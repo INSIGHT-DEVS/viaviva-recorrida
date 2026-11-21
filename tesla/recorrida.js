@@ -147,10 +147,11 @@
       if(onRoute && L.at!==k && k===L.next && reached<stops.length-1) d.classList.add("next");
       if(k===0) d.classList.add("first"); if(k===stops.length-1) d.classList.add("last");
       if(p.x < 6) d.classList.add("al-izq"); if(p.x > 94) d.classList.add("al-der");
-      // A stop with a brand isologo shows it instead of the dot (falls back to a text label if the file is missing).
+      // A stop with a brand isotype shows only the image on the line (no dot, no text). If the file fails to load,
+      // the stop falls back to the ordinary dot with its name. A stop with "marca" but no logo shows a text pill.
       if(p.logo || p.marca){
         d.classList.add("con-logo");
-        if(p.logo){ const im = mk("img","ruta-logo"); im.src=p.logo; im.alt=p.marca||p.n; im.onerror=()=>{ im.replaceWith(mk("span","ruta-marca",p.marca||p.n)); }; d.append(im); }
+        if(p.logo){ const im = mk("img","ruta-logo"); im.src=p.logo; im.alt=p.marca||p.n; im.onerror=()=>{ im.remove(); d.classList.remove("con-logo"); }; d.append(im); }
         else d.append(mk("span","ruta-marca",p.marca));
       }
       d.append(mk("b"), mk("small",null,p.corto || p.n));
@@ -181,7 +182,8 @@
 
   // Si los nombres de dos paradas vecinas se pisan, el de la derecha se corre hacia la derecha.
   function separarEtiquetas(map){
-    const ls = [...map.querySelectorAll(".ruta-stop")].sort((a,b)=>parseFloat(a.style.left)-parseFloat(b.style.left));
+    // Stops that show an isotype have their name hidden, so they take no part in the label spacing.
+    const ls = [...map.querySelectorAll(".ruta-stop")].filter(s=>!s.classList.contains("con-logo")).sort((a,b)=>parseFloat(a.style.left)-parseFloat(b.style.left));
     for(let k=1;k<ls.length;k++){
       const a = ls[k-1].querySelector("small").getBoundingClientRect(), b = ls[k].querySelector("small").getBoundingClientRect();
       if(a.right + 6 > b.left && !ls[k].classList.contains("al-der")) ls[k].classList.add("al-izq");
