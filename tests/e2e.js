@@ -16,7 +16,7 @@ function serve(modo) {
   return new Promise(resolve => {
     const srv = http.createServer((req, res) => {
       let p = decodeURIComponent(req.url.split('?')[0].split('#')[0]);
-      if (p === '/') p = '/index.html';
+      if (p.endsWith('/')) p += 'index.html';
       if (p === '/config.js' && modo === 'practica') { res.writeHead(200, { 'Content-Type': MIME['.js'] }); return res.end(CONFIG_VACIO); }
       const file = path.join(ROOT, p);
       if (!file.startsWith(ROOT) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404); return res.end(); }
@@ -40,6 +40,7 @@ async function correr(browser, modo) {
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error' && !/Failed to load resource|net::ERR|ERR_TUNNEL|ERR_INTERNET/.test(m.text())) errors.push(m.text()); });
 
+  if (modo === 'tesla') { await tesla(page, base); await ctx.close(); srv.close(); return; }
   await page.goto(base + '/', { waitUntil: 'load' });
   await page.waitForTimeout(800);
 
@@ -166,10 +167,42 @@ async function correr(browser, modo) {
   srv.close();
 }
 
+// Edición para visitas de clientes (tesla/): en inglés, sin cuentas, sin trivia ni encuesta ni oficios, con el cliente en el mapa en vivo.
+async function tesla(page, base) {
+  const errors = [];
+  page.on('pageerror', e => errors.push('pageerror: ' + e.message));
+  page.on('console', m => { if (m.type() === 'error' && !/tesla\.svg|Failed to load resource/.test(m.text())) errors.push(m.text()); });
+  await page.goto(base + '/tesla/?ruta=-34.56215,-58.43960', { waitUntil: 'load' });
+  await page.waitForTimeout(800);
+  check('tesla: página en inglés con 8 secciones', (await page.evaluate(() => document.documentElement.lang)) === 'en' && (await page.locator('section.sec').count()) === 8);
+  check('tesla: sin ingreso, trivia, encuesta ni oficios', await page.evaluate(() => !document.querySelector('#gate') && !document.querySelector('#trivia') && !document.querySelector('#survey') && !document.querySelector('#oficios')));
+  const es = await page.evaluate(() => (document.body.innerText.match(/\b(Ubicarme|Tocá|Estás|Recorrida|Volver|Paso \d|Contanos|Trivia)\b/g) || []));
+  check('tesla: sin textos en castellano en la interfaz', es.length === 0, es.join(', '));
+  const paradas = await page.locator('.ruta-stop small').evaluateAll(es => es.map(e => e.innerText));
+  check('tesla: recorrida con 4 paradas y Tesla primera', paradas.length === 4 && paradas[0] === 'Tesla', paradas.join(' · '));
+  check('tesla: marcador de Tesla en el mapa en vivo (isologo o etiqueta)', (await page.locator('.ruta-stop.con-logo').count()) === 1 && (await page.locator('.ruta-stop.con-logo .ruta-logo, .ruta-stop.con-logo .ruta-marca').count()) === 1);
+  const ruta = await page.locator('#ruta .ruta-txt').innerText();
+  check('tesla: estado de la recorrida en inglés', /Between .* and .*/.test(ruta) && / to /.test(ruta), ruta.replace(/\s+/g, ' '));
+  check('tesla: el mapa esquemático abre en Tesla', (await page.locator('#panel h3').innerText()).includes('Tesla') && (await page.locator('g.pin[data-id="tesla"].active').count()) === 1);
+  await page.click('g.pin[data-id="pampa"]'); await page.waitForTimeout(200);
+  check('tesla: tocar un punto del mapa cambia el panel', (await page.locator('#panel h3').innerText()).includes('crossing gate'));
+  const marcas = await page.locator('.marca').evaluateAll(es => es.map(e => e.innerText));
+  check('tesla: 7 marcas con Tesla destacada', marcas.length === 7 && (await page.locator('.marca.cliente').innerText()) === 'TESLA', marcas.join(', '));
+  check('tesla: 5 datos de Libertador', (await page.locator('#lib-facts .fact').count()) === 5);
+  await page.click('#menu-btn'); await page.waitForTimeout(200);
+  const links = await page.locator('#menu a').evaluateAll(as => as.map(a => a.getAttribute('href')));
+  const existen = await page.evaluate(hs => hs.every(h => !!document.getElementById(h.slice(1))), links);
+  check('tesla: menú con 8 secciones y anclas válidas', links.length === 8 && existen, links.join(' '));
+  check('tesla: antes/después y 5 pasos', (await page.locator('#ba input[type=range]').count()) === 1 && (await page.locator('#steps article.step').count()) === 5);
+  check('tesla: sin errores de JavaScript', errors.length === 0, errors.join(' | '));
+  await page.screenshot({ path: path.join(__dirname, 'ultima-corrida-tesla.png'), fullPage: false });
+}
+
 (async () => {
   const browser = await chromium.launch();
   await correr(browser, 'vivo');
   await correr(browser, 'practica');
+  await correr(browser, 'tesla');
   await browser.close();
   const failed = checks.filter(c => !c.ok).length;
   console.log(failed ? `\n${failed} chequeo(s) fallaron` : '\nTodo ok');

@@ -1,4 +1,4 @@
-# Vamos a VIAVIVA · recorrida con colegios
+# Vamos a VIAVIVA · recorridas por el paseo
 
 Página que los alumnos abren desde el celular durante la recorrida por VIAVIVA. Funciona así:
 
@@ -94,3 +94,14 @@ Las mismas vistas existen en Supabase (Table Editor → `ver_ranking` y `ver_enc
 - **Olvido de contraseña:** en "Ingresar" está "Me olvidé la contraseña", que manda un mail. El envío de mails gratuito de Supabase es limitado (pocos por hora). Si a un chico le pasa en la calle, lo más rápido es que cree una cuenta nueva con otro mail, siempre que no haya jugado todavía.
 - **Reiniciar desde el panel:** al final de `/#anfitrion` hay una zona **Reiniciar** con dos botones, cada uno con confirmación en dos toques. **Reiniciar la trivia** borra todos los intentos y la reabre, conservando cuentas y encuesta (ronda de práctica o segundo grupo). **Borrar alumnos y respuestas** borra todas las cuentas de alumnos con sus intentos y encuestas y deja la base limpia para otro colegio, conservando las cuentas de administración. Ninguno se puede deshacer: bajar los CSV antes.
 - **Para la próxima visita (otro colegio):** usar "Borrar alumnos y respuestas" y cambiar colegio y fecha en `index.html` (ver `CLAUDE.md`, regla 8).
+
+---
+
+## Edición para visitas de clientes (`tesla/`)
+
+Una segunda página, en inglés y sin cuentas, para recorrer VIAVIVA con un cliente: `https://viaviva-recorrida.vercel.app/tesla/`. No tiene trivia, encuesta ni la parte de oficios; sí tiene el manifiesto, el mapa, la historia (antes/después y paso a paso), los números de hoy, los tres tramos con el mapa esquemático, una sección propia de Libertador con el cliente, y la barra de la recorrida en vivo con el isologo del cliente en su ubicación. No usa Supabase: nada se guarda.
+
+- **Isologo del cliente**: poner el archivo oficial en `tesla/assets/tesla.svg` (o PNG, y ajustar `CLIENTE.logo` en `tesla/contenido.js`). Mientras no exista, la barra muestra "TESLA" como etiqueta de texto.
+- **Cambiar de cliente o de recorrido**: todo está en `tesla/contenido.js`: el bloque `CLIENTE` (nombre, isologo, ubicación), `CONCESIONARIAS` y `LIBERTADOR` (los datos de la sección 07), `PUNTOS` (mapa esquemático), `RECORRIDA.paradas` (paradas de la visita, en orden; la que tiene `logo` muestra el isologo) y `SECCIONES` (menú). Los textos fijos están en `tesla/index.html`.
+- **Probar sin estar en el lugar**: `…/tesla/?ruta=-34.56215,-58.43960` simula una posición.
+- **URL propia** (opcional): en Vercel, importar este mismo repo como otro proyecto (por ejemplo `viaviva-tesla`) con *Root Directory* = `tesla`; queda en `viaviva-tesla.vercel.app` sin tocar nada más.
