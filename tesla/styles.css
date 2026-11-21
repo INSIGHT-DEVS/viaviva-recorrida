@@ -464,8 +464,8 @@ html{scroll-padding-top:var(--stick-h,0px)}
 .marca{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:9px 14px;border:1.5px solid var(--ink);background:var(--card);color:var(--ink)}
 .marca.cliente{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:500}
 .pin-cliente .ring{stroke-width:4}
-/* Brand isologo on the live route bar: replaces the dot of a stop that has "logo" */
-.ruta-stop.con-logo b{display:none}
+/* Brand isotype on the live route bar: replaces the dot and the name of a stop that has "logo" (image only, no text) */
+.ruta-stop.con-logo b,.ruta-stop.con-logo small{display:none}
 .ruta-stop .ruta-logo{display:block;width:34px;height:34px;object-fit:contain;background:var(--card);border:2px solid var(--c);border-radius:50%;padding:5px;box-sizing:border-box;margin-top:-9px;position:relative;z-index:1}
 .ruta-stop .ruta-marca{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;background:var(--ink);color:#fff;padding:5px 7px;border-radius:12px;margin-top:-6px;position:relative;z-index:1;border:2px solid var(--c)}
 .ruta-stop.here .ruta-logo,.ruta-stop.here .ruta-marca{box-shadow:0 0 0 3px rgba(241,194,50,.8)}

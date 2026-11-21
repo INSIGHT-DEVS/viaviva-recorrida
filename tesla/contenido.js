@@ -2,10 +2,11 @@
 // Everything a client visit needs to change lives here: the client block, the Libertador highlights,
 // the districts, the schematic map, the story, the live route bar and the sections menu.
 
-// The client of this visit. logo: path to the brand's isologo (SVG or PNG) placed in assets/; null = text label.
+// The client of this visit. logo: path to the brand's isotype (PNG with transparent background, or SVG) placed in
+// assets/; the live route bar shows only that image at the client's stop, with no text. null = text label instead.
 const CLIENTE = {
   nombre:"Tesla",
-  logo:"assets/tesla.svg",         // put the official isologo here (see README); while missing, "Tesla" is shown as text
+  logo:"assets/tesla.png",         // official Tesla isotype (supplied by the client)
   donde:"VIAVIVA Libertador · Federico Lacroze",
   lat:-34.56252, lng:-58.43751,    // Federico Lacroze and the tracks
   visita:"Site visit · VIAVIVA Libertador"
