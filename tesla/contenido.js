@@ -12,41 +12,43 @@ const CLIENTE = {
   visita:"Site visit · VIAVIVA Libertador"
 };
 
-// "corto" is the district name shown under the line of the live route bar (in English).
+// "corto" is the district name in English, shown under the line of the live route bar and along the schematic map.
 const TRAMOS = {
-  chino:{nombre:"VIAVIVA Barrio Chino",corto:"Chinatown",color:"--t-chino",logo:"lg-chino",calles:"Monroe to Sucre"},
+  chino:{nombre:"VIAVIVA Barrio Chino",corto:"Chinatown",color:"--t-chino",logo:"lg-chino",calles:"Monroe to La Pampa"},
   libertador:{nombre:"VIAVIVA Libertador",corto:"Libertador",color:"--t-lib",logo:"lg-lib",calles:"La Pampa to Olleros"},
   hipodromo:{nombre:"VIAVIVA Hipódromo",corto:"Racetrack",color:"--t-hip",logo:"lg-hip",calles:"Olleros to Dorrego"}
 };
 
 // Schematic map (section "The three districts"): streets, colored segments and the points you can tap.
+// y: vertical position in the 620-high drawing (not to scale). Chinatown runs to La Pampa, Libertador from La Pampa
+// to Olleros, the Racetrack district from Olleros to Dorrego.
 const CALLES = [
   {n:"Monroe",y:40},{n:"Mendoza",y:120},{n:"Juramento",y:175},{n:"Echeverría",y:225},
-  {n:"Sucre",y:280},{n:"La Pampa",y:340},{n:"F. Lacroze",y:452},{n:"Olleros",y:470},{n:"Dorrego",y:585}
+  {n:"Sucre",y:280},{n:"La Pampa",y:340},{n:"F. Lacroze",y:432},{n:"Olleros",y:486},{n:"Dorrego",y:585}
 ];
-const SEG = [{t:"chino",y1:40,y2:280},{t:"libertador",y1:340,y2:470},{t:"hipodromo",y1:470,y2:585}];
+const SEG = [{t:"chino",y1:40,y2:340},{t:"libertador",y1:340,y2:486},{t:"hipodromo",y1:486,y2:585}];
 const PUNTOS = [
-  {id:"tesla",t:"libertador",y:452,label:"Tesla",sub:"(Federico Lacroze)",
+  {id:"tesla",t:"libertador",y:432,label:"Tesla",sub:"(Federico Lacroze)",
    titulo:"Tesla, the anchor of the automotive row",
    texto:"At Federico Lacroze, at the head of the dealership row of VIAVIVA Libertador: Audi, Volvo, Jaguar, Land Rover, Ducati and Kia, with Tesla anchoring the whole lineup.",
    items:["Underground parking for 140 cars","Valet parking at night with 100 extra spots at the Racket Club","Daytime and nighttime dining steps away"]},
-  {id:"libertador",t:"libertador",y:405,label:"Libertador",
+  {id:"libertador",t:"libertador",y:383,label:"Libertador",
    titulo:"The premium experience",
    texto:"Eight blocks to eat, shop, go out at night, play at the renewed Plaza Bolivia and see the cars of seven brands. And new openings are on the way.",
    items:["Plaza Bolivia with playground and carousel","Pedestrian access to the Racket Club through VIAVIVA"]},
-  {id:"pampa",t:"libertador",y:340,label:"La Pampa & the tracks",
-   titulo:"The most famous crossing gate",
-   texto:"The Buenos Aires saying “estar en Pampa y la vía” (to be flat broke) was born at this crossing: the story is right here. In May 2019 La Pampa street reopened under the train.",
-   items:["The Libertador district starts here"]},
   {id:"belgranoc",t:"chino",y:175,label:"Belgrano C",sub:"(station)",
    titulo:"The station that went up",
    texto:"With the viaduct, Belgrano C station was raised: fully covered, with a 220-metre platform, elevators and escalators.",
    items:["The Juramento crossing gate is gone","From the platform you see the whole promenade"]},
-  {id:"chino",t:"chino",y:120,label:"Barrio Chino",
+  {id:"chino",t:"chino",y:120,label:"Chinatown",
    titulo:"The gateway",
    texto:"The best-known district and the first to open, in 2023: Chinese, Korean and Japanese food, bubble tea, cafés, ice cream and shops. Home of the Chinese New Year celebrations.",
    items:["Tourist information centre in four languages","Stop of the hop-on hop-off tourist bus"]},
-  {id:"hipodromo",t:"hipodromo",y:528,label:"Hipódromo",sub:"(coming soon)",
+  {id:"lisandro",t:"libertador",y:486,label:"Lisandro de la Torre",sub:"(station)",
+   titulo:"The other station on the viaduct",
+   texto:"Lisandro de la Torre station, at Olleros, was raised with the viaduct too: one stop from Belgrano C on the Mitre line towards Retiro, and the closest station to Libertador and the Racetrack district.",
+   items:["Mitre line, Retiro–Tigre branch","The Olleros crossing gate is gone"]},
+  {id:"hipodromo",t:"hipodromo",y:540,label:"Racetrack",sub:"(coming soon)",
    titulo:"Nights in the open air",
    texto:"Between Olleros and Dorrego, next to the Palermo woods: entertainment, dining and open-air plans.",
    items:["Coming soon"]}
@@ -107,7 +109,7 @@ const RECORRIDA = {
      lat:CLIENTE.lat, lng:CLIENTE.lng},
     {id:"pampa", n:"La Pampa & the tracks", corto:"La Pampa", t:"libertador", donde:"Start of Libertador",
      lat:-34.56070, lng:-58.44700},
-    {id:"belgranoc", n:"Belgrano C · Barrio Chino", corto:"Barrio Chino", t:"chino", donde:"Juramento",
+    {id:"belgranoc", n:"Belgrano C · Chinatown", corto:"Chinatown", t:"chino", donde:"Juramento",
      lat:-34.55805, lng:-58.45001},
     {id:"monroe", n:"Monroe", corto:"Monroe", t:"chino", donde:"End of the route",
      lat:-34.55431, lng:-58.45329}
