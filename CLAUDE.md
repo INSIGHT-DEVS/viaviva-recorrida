@@ -1,4 +1,4 @@
-# Vamos a VIAVIVA · recorrida con colegios
+# Vamos a VIAVIVA · recorridas por el paseo
 
 Web app mobile-first que los alumnos abren desde un link durante la recorrida por VIAVIVA:
 ingreso general (crear cuenta o ingresar antes de ver nada), historia y mapa del paseo, trivia
@@ -31,9 +31,10 @@ Idioma: español rioplatense (vos).
 | `supabase/schema.sql` | Base inicial, idempotente. En un proyecto nuevo se aplica primero y después las migraciones, en orden. |
 | `supabase/migrations/` | Cambios posteriores a la base, un archivo por cambio, numerados. `002`: administradores por mail y `admin_resultados()`; `003`: `admin_reset()` (botones de reinicio del panel); `004`: arreglo de `admin_reset()` (los `DELETE` llevan `WHERE`, que Supabase exige en las RPC). Los mails autorizados no van en el repo (se insertan aparte, ver README). |
 | `assets/` | Imágenes, íconos PWA, logos y fuentes woff2. |
-| `tests/e2e.js` | Prueba de humo con Playwright en dos modos (en vivo y práctica), con el panel de resultados simulado. Se corre con `npm test`. |
+| `tests/e2e.js` | Prueba de humo con Playwright en tres modos (en vivo, práctica y edición `tesla/`), con el panel de resultados simulado. Se corre con `npm test`. |
 | `vercel.json` | Headers: `noindex` (la página no aparece en Google) y `no-cache` para html, js y css. |
 | `README.md` | Puesta en marcha, operación el día de la visita, exportar resultados, reinicio para otro colegio. |
+| `tesla/` | **Edición para visitas de clientes**, en inglés y sin cuentas (sin Supabase, sin trivia, encuesta ni oficios). Página aparte servida en `/tesla/`, con copia propia de `styles.css`, `assets/` y `recorrida.js` (traducido, con marcador de isologo) y un `app.js` reducido (menú, mapa, antes/después, pasos, sección Libertador). Todo lo editable está en `tesla/contenido.js` (`CLIENTE`, `CONCESIONARIAS`, `LIBERTADOR`, `PUNTOS`, `RECORRIDA`, `SECCIONES`). Un arreglo en la edición de colegios no se propaga solo: si aplica, repetirlo acá. |
 
 ## Reglas
 

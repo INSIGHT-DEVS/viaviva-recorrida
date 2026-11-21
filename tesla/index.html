@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Welcome to VIAVIVA · Tesla</title>
+<meta name="description" content="A walk through VIAVIVA: how it was built, what it is today and where Tesla fits in. More life in your city.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#00B800">
+<meta name="color-scheme" content="light">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VIAVIVA">
+<meta property="og:title" content="Welcome to VIAVIVA">
+<meta property="og:description" content="A walk through VIAVIVA: how it was built, what it is today and where Tesla fits in. More life in your city.">
+<meta property="og:url" content="https://viaviva-recorrida.vercel.app/tesla/">
+<meta property="og:image" content="https://viaviva-recorrida.vercel.app/tesla/assets/og-vamos-a-viaviva.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Welcome to VIAVIVA">
+<meta name="twitter:description" content="A walk through VIAVIVA: how it was built, what it is today and where Tesla fits in.">
+<meta name="twitter:image" content="https://viaviva-recorrida.vercel.app/tesla/assets/og-vamos-a-viaviva.jpg">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{background:#F6FFF6}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<link rel="stylesheet" href="styles.css">
+
+<div class="top"><span class="mono">VIAVIVA -- Tesla</span><span class="logo va" role="img" aria-label="VIAVIVA"></span></div>
+<!-- Fixed at the top while scrolling: sections menu and today's route -->
+<div class="stick" id="stick">
+<div class="mebar" id="mebar"></div>
+<div class="menu" id="menu" hidden></div>
+<nav class="ruta" id="ruta" hidden aria-label="Today's route"></nav>
+</div>
+
+<!-- 01 WELCOME -->
+<section class="sec hero" id="inicio" aria-labelledby="t-hero">
+  <div class="rail" aria-hidden="true"><span>01</span><span>Welcome</span></div>
+  <div class="inner">
+    <div class="hero-grid">
+      <div>
+        <span class="mono" style="opacity:.85" id="hero-visita">Site visit · VIAVIVA Libertador</span>
+        <span class="logo wordmark" role="img" aria-label="VIAVIVA" style="margin-top:14px"></span>
+        <h1 id="t-hero">More life in your city.</h1>
+        <div class="kicker">
+          <p><span class="ln">Today you'll see VIAVIVA from the inside:</span><span class="ln">how it was built, what it is today and where Tesla fits in.</span></p>
+        </div>
+      </div>
+      <figure class="hero-photo">
+        <img src="assets/aereo.jpg" alt="Aerial view of the Mitre railway viaduct crossing Belgrano, with the promenade underneath">
+        <figcaption>4.5 km under the Mitre railway</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- 02 MANIFESTO -->
+<section class="sec manifesto on-brand" id="manifiesto" aria-label="Manifesto">
+  <div class="rail" aria-hidden="true"><span>02</span><span>Manifesto</span></div>
+  <div class="inner">
+    <span class="eyebrow">Manifesto</span>
+    <div class="mf">
+      <p><span class="ln">Above, the train goes by.</span><span class="ln">Below, everything else.</span></p>
+      <p><span class="ln">Where the city used to be cut in two,</span><span class="ln">today it comes together.</span></p>
+      <p><span class="ln">VIAVIVA is not a place you pass through.</span><span class="ln">It's where you feel like staying.</span></p>
+      <p><span class="ln">Every district has its own rhythm.</span></p>
+      <p><span class="ln">Four and a half kilometres</span><span class="ln">of flavours from far away,</span><span class="ln">design that surprises you on every block,</span><span class="ln">music you hear from the corner</span><span class="ln">and nights that start without a plan.</span></p>
+      <p><span class="hl">Welcome to VIAVIVA.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 THE ROUTE -->
+<section class="sec mapsec" id="recorrido-mapa" aria-labelledby="t-mapa">
+  <div class="rail" aria-hidden="true"><span>03</span><span>The route</span></div>
+  <div class="inner">
+    <span class="eyebrow">The route</span>
+    <h2 id="t-mapa">This is the route</h2>
+    <div class="lead"><p><span class="ln">From Monroe to Dorrego, under the Mitre railway:</span><span class="ln">Barrio Chino, Libertador and Hipódromo.</span></p></div>
+    <figure class="bigmap">
+      <div class="bigmap-scroll" tabindex="0" aria-label="Map of VIAVIVA. On a phone, swipe to see the whole route.">
+        <img src="assets/mapa-viaviva.jpg" alt="Map of VIAVIVA over the streets of Belgrano and Palermo: VIAVIVA Barrio Chino from Monroe to Sucre, VIAVIVA Libertador from La Pampa to Olleros and VIAVIVA Hipódromo from Olleros to Dorrego." width="1688" height="950">
+      </div>
+      <figcaption class="note swipe">Swipe to see the whole route →</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 04 THE STORY -->
+<section class="sec reason" id="antes-despues" aria-labelledby="t-rw">
+  <div class="rail" aria-hidden="true"><span>04</span><span>The story</span></div>
+  <div class="inner">
+    <span class="eyebrow">The story</span>
+    <h2 id="t-rw">The track that once divided, now connects.</h2>
+    <div class="lead">
+      <p><span class="ln">Until 2019, the train ran at street level</span><span class="ln">and split the neighbourhood in two.</span></p>
+      <p><span class="ln">With the Mitre Viaduct the tracks went up and the crossing gates disappeared.</span><span class="ln">Below, the space where VIAVIVA stands today was freed up.</span></p>
+    </div>
+    <div class="facts">
+      <div class="fact"><b>3.9 km</b><span class="t">of elevated tracks</span><p>The train now runs overhead between Congreso and Dorrego avenues, across Núñez, Belgrano and Palermo.</p></div>
+      <div class="fact"><b>8</b><span class="t">crossing gates removed</span><p>Monroe, Blanco Encalada, Mendoza, Juramento, Olazábal, Sucre, La Pampa and Olleros no longer have a gate. Four streets that were cut by the tracks were opened as well.</p></div>
+      <div class="fact"><b>650,000</b><span class="t">people benefited</span><p>Everyone who crossed or lived next to the tracks: 100,000 daily passengers of the Tigre line, 30,000 bus riders, 70,000 drivers and 450,000 residents of Núñez, Belgrano and Palermo.</p></div>
+      <div class="fact"><b>Up to 20 min</b><span class="t">less travel time per day</span><p>At peak hours the busiest gates in the city stayed down for about 20 minutes of every hour. The one at Vértiz and La Pampa, on this same line, up to 35. No gates, no waiting.</p></div>
+    </div>
+
+    <div class="ad-grid">
+      <div class="ba" id="ba"></div>
+      <div class="ad-copy">
+        <h3>From empty ground to meeting point</h3>
+        <p class="note" style="font-size:16px">The same space under the viaduct: first, dirt and weeds; today, the place to come, discover and enjoy.</p>
+        <p class="note">Drag the yellow line to compare.</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:28px;margin-top:12px">Step by step</h3>
+    <div class="steps" id="steps"></div>
+
+  </div>
+</section>
+
+<!-- 05 TODAY -->
+<section class="sec ctx" id="hoy" aria-labelledby="t-que">
+  <div class="rail" aria-hidden="true"><span>05</span><span>Today</span></div>
+  <div class="inner">
+    <span class="eyebrow">Today</span>
+    <h2 id="t-que">What is VIAVIVA today?</h2>
+    <div class="stats">
+      <div class="stat"><i style="background:var(--green)"></i><b>4.5 km</b><small>under the Mitre railway, from Monroe to Dorrego</small></div>
+      <div class="stat"><i style="background:var(--red)"></i><b>6 ha</b><small>of public space</small></div>
+      <div class="stat"><i style="background:var(--blue)"></i><b>+100</b><small>shops and restaurants</small></div>
+      <div class="stat"><i style="background:var(--yellow)"></i><b>30 years</b><small>of concession on land that belongs to the State</small></div>
+    </div>
+    <div class="ctx-grid">
+      <div class="quote"><p>“VIAVIVA is a one-of-a-kind open-air promenade, 4.5 km long under the Mitre railway, from Belgrano's Barrio Chino to Palermo, where there is always something to discover.”</p></div>
+      <div class="ctx-side">
+        <div class="bignum"><b>1,000,000</b><span>people visit every month.</span></div>
+        <div class="lead">
+          <p><span class="ln">Many people call it “Barrio Chino”,</span><span class="ln">but Barrio Chino is one part of VIAVIVA.</span></p>
+          <p>There are three districts, and each has its own atmosphere.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 THE THREE DISTRICTS -->
+<section class="sec" id="mapa" aria-labelledby="t-tr">
+  <div class="rail" aria-hidden="true"><span>06</span><span>Districts</span></div>
+  <div class="inner">
+    <span class="eyebrow">The three districts</span>
+    <h2 id="t-tr">More than one way to live it</h2>
+    <div class="tramos">
+      <div class="tr">
+        <div class="tr-head"><span class="logo lg-chino c-chino" role="img" aria-label="VIAVIVA Barrio Chino"></span><div><h3 class="c-chino">Energy and culture</h3><span class="status">Open since 2023</span></div></div>
+        <ul class="plans">
+          <li><span>To eat</span><span>Ramen, baos, dumplings, Korean, Japanese and street food.</span></li>
+          <li><span>For a treat</span><span>Bubble tea, bingsu, coffee and ice cream.</span></li>
+          <li><span>To shop</span><span>Asian supermarkets, stationery, clothing and gifts.</span></li>
+          <li><span>For the photo</span><span>Festivals, the Chinese New Year and brand activations.</span></li>
+        </ul>
+      </div>
+      <div class="tr">
+        <div class="tr-head"><span class="logo lg-lib c-lib" role="img" aria-label="VIAVIVA Libertador"></span><div><h3 class="c-lib">The premium experience</h3><span class="status">Open since Nov. 2025</span></div></div>
+        <ul class="plans">
+          <li><span>For cars</span><span>Audi, Volvo, Jaguar, Land Rover, Ducati, Kia and Tesla, anchoring the whole row.</span></li>
+          <li><span>To eat</span><span>A mix of daytime and nighttime dining, with more openings on the way.</span></li>
+          <li><span>To dress</span><span>Estación Central and Zeus.</span></li>
+          <li><span>At night</span><span>Craft beer, cocktails, music and valet parking.</span></li>
+          <li><span>To play</span><span>Kinderland and the renewed Plaza Bolivia, with playground and carousel.</span></li>
+          <li><span>To park</span><span>Underground parking for 140 cars, plus 100 valet spots at night at the Racket Club.</span></li>
+        </ul>
+        <p class="soon"><b style="font-weight:500">Coming soon:</b> new openings to discover.</p>
+      </div>
+      <div class="tr">
+        <div class="tr-head"><span class="logo lg-hip c-hip" role="img" aria-label="VIAVIVA Hipódromo"></span><div><h3 class="c-hip">Nights in the open air</h3><span class="status">Coming soon</span></div></div>
+        <ul class="plans">
+          <li><span>Where</span><span>Between Olleros and Dorrego, next to the Palermo woods.</span></li>
+          <li><span>What</span><span>Entertainment, dining and open-air plans.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="strap">One promenade, many worlds: each district with its own rhythm.</div>
+    <div class="lead"><p><span class="ln">Tap a point on the map and we'll take you to what's there.</span><span class="ln">It's schematic: it shows the order of the main streets, not the real scale.</span></p></div>
+    <div class="map-grid">
+      <svg class="map-svg" id="map" viewBox="0 0 330 620" role="img" aria-label="Schematic map of VIAVIVA, from Monroe to Dorrego"></svg>
+      <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+        <div class="panel" id="panel" tabindex="-1" aria-live="polite"></div>
+        <div class="aside" id="dicho">
+          <span class="mono note">On the map: La Pampa &amp; the tracks</span>
+          <h3>A Buenos Aires saying was born here</h3>
+          <p>“Estar en Pampa y la vía” is what porteños say of someone who is flat broke. And it comes from this crossing.</p>
+          <p>Between 1887 and 1926 the Hipódromo Nacional racetrack operated near where River Plate's stadium stands today. A free tram took the crowds there, and its line ended at La Pampa and the tracks. That is where the gamblers who had lost everything at the races got off, and had to find their way home.</p>
+          <p>That gate was one of the ones the viaduct removed: today, at La Pampa, you walk under the train.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 LIBERTADOR & TESLA -->
+<section class="sec on-lib" id="libertador" aria-labelledby="t-lib">
+  <div class="rail" aria-hidden="true"><span>07</span><span>Libertador</span></div>
+  <div class="inner">
+    <span class="eyebrow">VIAVIVA Libertador</span>
+    <h2 id="t-lib">Libertador, home of Tesla.</h2>
+    <div class="lead">
+      <p><span class="ln">Eight blocks from La Pampa to Olleros, open since November 2025:</span><span class="ln">the premium district of VIAVIVA, with Tesla at Federico Lacroze</span><span class="ln">anchoring the whole automotive row.</span></p>
+    </div>
+    <div class="marcas" id="marcas" aria-label="Car brands at VIAVIVA Libertador"></div>
+    <div class="facts" id="lib-facts"></div>
+  </div>
+</section>
+
+<!-- 08 FOLLOW US -->
+<section class="sec final on-brand" id="seguinos" aria-labelledby="t-fin">
+  <div class="rail" aria-hidden="true"><span>08</span><span>Follow us</span></div>
+  <div class="inner" style="gap:28px">
+    <h2 id="t-fin">Welcome to<br>VIAVIVA.</h2>
+    <div class="strip">
+      <div class="s0">More than one way to live it</div>
+      <div class="s1"><span class="logo wordmark"></span><small>Barrio Chino</small></div>
+      <div class="s2"><span class="logo wordmark"></span><small>Libertador</small></div>
+      <div class="s3"><span class="logo wordmark"></span><small>Hipódromo</small></div>
+    </div>
+    <div class="links">
+      <a class="lk" href="https://www.instagram.com/viaviva.ar/" target="_blank" rel="noopener"><span class="mono">Instagram</span><b>@viaviva.ar</b><small>News, events and what's on every week.</small></a>
+      <a class="lk" href="https://www.tiktok.com/@viaviva.ar" target="_blank" rel="noopener"><span class="mono">TikTok</span><b>@viaviva.ar</b><small>What to try, in short videos.</small></a>
+      <a class="lk" href="https://www.google.com/maps/search/?api=1&amp;query=VIAVIVA%20Libertador%2C%20Federico%20Lacroze%20y%20v%C3%ADas%20del%20Mitre%2C%20Buenos%20Aires" target="_blank" rel="noopener"><span class="mono">How to get there</span><b>Federico Lacroze &amp; the tracks</b><small>VIAVIVA Libertador. Open in Google Maps.</small></a>
+    </div>
+    <div class="foot">
+      <strong>More life in your city.</strong>
+      <span>Sunday to Wednesday, 8 am to midnight · Thursday to Saturday, 8 am to 2 am</span>
+    </div>
+    <p class="note" style="color:var(--on-brand);opacity:.85">Viaduct figures: Government of the City of Buenos Aires. Schematic map, not to scale.</p>
+  </div>
+</section>
+
+<!-- Editable content (client, districts, map, story, route, menu) -->
+<script src="contenido.js"></script>
+<!-- Page logic (menu, map, before/after, steps, Libertador highlights) -->
+<script src="app.js"></script>
+<!-- Today's route bar with live location -->
+<script src="recorrida.js"></script>
+
+</body>
+</html>
